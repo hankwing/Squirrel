@@ -597,7 +597,7 @@ int parsePara(int argc, char** argv) {
 			i++;
 		} else if (strcmp(argv[i], "-fitsHDU") == 0) {
 			if (i + 1 >= argc || strlen(argv[i + 1]) == 0) {
-				printf("-fitsHDU must follow a number\n");
+				printf("-fitsHDU must follow a numbe\n");
 				return 0;
 			}
 			fitsHDU = atoi(argv[i + 1]);

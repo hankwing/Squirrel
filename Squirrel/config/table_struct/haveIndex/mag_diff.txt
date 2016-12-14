@@ -1,6 +1,0 @@
-(
-mdid          bigserial PRIMARY KEY,
-catid         bigint,
-gridid 	      integer,
-mdvalue       double precision
-);
