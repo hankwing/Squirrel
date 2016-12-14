@@ -1,0 +1,6 @@
+#!/bin/bash
+
+for(( worker = 91; worker < 100; worker++)) 
+do
+	scp -r ~/gwac/Squirrel 192.168.0.$worker:~/gwac
+done
