@@ -41,7 +41,7 @@ CPP_DEPS += \
 cross_src/%.o: ../cross_src/%.cpp
 	@echo 'Building file: $<'
 	@echo 'Invoking: GCC C++ Compiler'
-	g++ -DLINUX2 -D_POSIX_PTHREAD_SEMANTICS -I/home/wamdm/jdk1.7.0_79/include -I"/home/wamdm/gwac/Squirrel/library/acl/lib_acl_cpp/include" -I/home/wamdm/jdk1.7.0_79/include/linux -I"/home/wamdm/gwac/Squirrel/library/astrometry.net-0.38/include" -I"/home/wamdm/gwac/Squirrel/library/cfitsio/include" -I"/home/wamdm/gwac/Squirrel/library/wcstools-3.8.5/libwcs" -O3 -g3 -Wall -c -fmessage-length=0 -fPIC -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -o "$@" "$<"
+	g++ -DLINUX2 -D_POSIX_PTHREAD_SEMANTICS -I/usr/lib/jvm/jdk1.8.0_101/include -I"/home/wamdm/workspace/Squirrel/library/acl/lib_acl_cpp/include" -I/usr/lib/jvm/jdk1.8.0_101/include/linux -I"/home/wamdm/workspace/Squirrel/library/astrometry.net-0.38/include" -I"/home/wamdm/workspace/Squirrel/library/cfitsio/include" -I"/home/wamdm/workspace/Squirrel/library/wcstools-3.8.5/libwcs" -O3 -g3 -Wall -c -fmessage-length=0 -fPIC -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -o "$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
 

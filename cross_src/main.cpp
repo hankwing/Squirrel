@@ -303,6 +303,8 @@ static void * crossThread( void * command) {
 		objStarFile->judgeInAreaPlane();
 		//dataStore->store(objStarFile, 0);
 		//cm->printMatchedRst(outFile, objStarFile, areaBox);
+		gettimeofday(&end, NULL);
+		printf("cross time: %lf\n", ((end.tv_sec-start.tv_sec)*1000000+(end.tv_usec-start.tv_usec)));
 		cm->sendResultsToRedis(cluster, objStarFile, threadNum);
 
 		delete cm;
@@ -313,7 +315,8 @@ static void * crossThread( void * command) {
 		float time_use=(end.tv_sec-start.tv_sec)*1000000+(end.tv_usec-start.tv_usec);//微秒
 		ostringstream stringStream;
 		stringStream << " "<< time_use/1000000 << " "
-				<< objStarFile->matchedCount << " " << objStarFile->OTStarCount;
+				<< objStarFile->matchedCount << " " << objStarFile->OTStarCount <<
+				" " << objStarFile->abStar;
 		commandString = commandString.append(stringStream.str());
 
 		// send result to redis

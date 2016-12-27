@@ -28,6 +28,7 @@ struct WorldCoor *GetFITSWCS(const char *filename, char *header, int verbose,
 
 StarFileFits::StarFileFits() {
 
+	fileExist = 0;
 	showProcessInfo = 0;
 	areaBox = 0.0;
 	airmass = 0.0;
@@ -610,17 +611,19 @@ void StarFileFits::getMagDiff() {
   int gridNUmber = gridX * gridY;
   fluxPtn = (FluxPartition*) malloc(sizeof (FluxPartition) * gridNUmber);
   memset(fluxPtn, 0, sizeof (FluxPartition) * gridNUmber);
+/*
 
   float minXf = 360.0;
   float maxXf = 0.0;
   float minYf = 90.0;
   float maxYf = -90.0;
+*/
 
   CMStar *tStar = starList;
-  minXf = tStar->pixx;
-  maxXf = tStar->pixx;
-  minYf = tStar->pixy;
-  maxYf = tStar->pixy;
+  float minXf = tStar->pixx;
+  float maxXf = tStar->pixx;
+  float minYf = tStar->pixy;
+  float maxYf = tStar->pixy;
   tStar = tStar->next;
 
   while (tStar) {
@@ -639,6 +642,13 @@ void StarFileFits::getMagDiff() {
     tStar = tStar->next;
   }
 
+  maxXf = maxXf + 1;
+  maxYf = maxYf + 1;
+  minXf = minXf - 1;
+  minYf = minYf - 1;
+  minXf = minXf < 0 ? 0 : minXf;
+  minYf = minYf < 0 ? 0 : minYf;
+
   int minXi = floor(minXf);
   int maxXi = ceil(maxXf);
   int minYi = floor(minYf);
@@ -653,6 +663,9 @@ void StarFileFits::getMagDiff() {
   while (tStar) {
     int xIdx = (tStar->pixx - minXi) / xGridLen;
     int yIdx = (tStar->pixy - minYi) / yGridLen;
+
+    if (xIdx >= gridX) xIdx = gridX-1;
+    if (yIdx >= gridY) yIdx = gridY-1;
     tStar->gridIdx = yIdx * gridX + xIdx;
 
     if (tStar->gridIdx > gridNUmber - 1) {

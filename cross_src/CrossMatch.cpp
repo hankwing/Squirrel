@@ -76,10 +76,12 @@ void CrossMatch::match(StarFile *refStarFile, StarFile *objStarFile,Partition * 
   while (nextStar) {
       // core code!!
     if(zones->getMatchStar(nextStar) == 0) {
+
     	objStarFile->OTStarCount ++;
     } else {
     	objStarFile->matchedCount ++;
     }
+    if( nextStar->mag >= 50) objStarFile->abStar ++;
     nextStar = nextStar->next;
   }
 

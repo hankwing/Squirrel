@@ -18,6 +18,7 @@ StarFile::StarFile() {
   this->starList = NULL;
   this->starNum = 0;
   this->OTStarCount = 0;
+  this->abStar = 0;
   this->matchedCount = 0;
 }
 
@@ -26,11 +27,15 @@ StarFile::StarFile(const char* fileName) {
   this->starList = NULL;
   this->starNum = 0;
   this->OTStarCount = 0;
+  this->abStar = 0;
   this->matchedCount = 0;
 }
 
 StarFile::StarFile(const StarFile& orig) {
 
+	this->matchedCount = 0;
+	this->OTStarCount = 0;
+	this->abStar = 0;
   this->starNum = orig.starNum;
   this->fileName = orig.fileName;
 

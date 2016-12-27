@@ -20,6 +20,7 @@ public:
     long starNum;
     int matchedCount;
     int OTStarCount;
+    int abStar;
     std::vector<std::string> redisStrings;
 
 public:
