@@ -10,6 +10,7 @@
 #include <string.h>
 #include <math.h>
 #include <time.h>
+#include <utility>
 #include <string>
 #include "Partition.h"
 #include "StarFile.h"
@@ -87,9 +88,9 @@ void Partition::partitonStarField(StarFile *starFile) {
  * @return the matched star is stored on objStar->match, 
  *         the distance between two stars is stored on objStar->error
  */
-int Partition::getMatchStar(CMStar *objStar) {
+std::pair<int, std::string> Partition::getMatchStar(CMStar *objStar) {
 
-	int matchedCount = 0;
+	std::pair<int, std::string> matchedInfo(-1, "");
 	long sZoneNum = 0;
 	long *searchZonesIdx = getStarSearchZone(objStar, sZoneNum);
 
@@ -106,29 +107,15 @@ int Partition::getMatchStar(CMStar *objStar) {
 	}
 	if (minPoint) {
 		// find the match star
-		matchedCount = 1;
+		matchedInfo.first = minPoint->starId;
 		objStar->match = minPoint;
 		objStar->error = minError;
-		//count ++;
-		//printf("%d\n", count);
-		//char string[200];
-		//sprintf(string, "%8ld %12f %12f %8ld %12f %12f %12f\n",
-		//		objStar->starId, objStar->pixx, objStar->pixy, objStar->match->starId,
-		//		objStar->match->pixx, objStar->match->pixy, objStar->error);
-		//printf("%s ", minPoint->redis_key);
-		//minPoint->cmd_string->clear();
 
 		char string[500];
 
 		objStar->toString(minPoint->redis_key, string);
-		objStar->starFile->redisStrings.push_back(string);
-		//acl::redis_list cmd_list(minPoint->conn, 100);
-		//if(cmd_list.rpush(minPoint->redis_key,string, NULL) <= 0) {
-
-		//	printf("failed\n");
-		//}
-
-		//minPoint->cmd_string->append(minPoint->redis_key, string);
+		matchedInfo.second = string;
+		//objStar->starFile->redisStrings.push_back(string);
 
 	} else {
 		objStar->match = NULL;
@@ -136,7 +123,7 @@ int Partition::getMatchStar(CMStar *objStar) {
 	}
 	free(searchZonesIdx);
 
-	return matchedCount;
+	return matchedInfo;
 }
 
 /**

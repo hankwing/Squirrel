@@ -21,7 +21,8 @@ public:
     int matchedCount;
     int OTStarCount;
     int abStar;
-    std::vector<std::string> redisStrings;
+    std::vector<std::vector<std::string> > starDataCache;
+    //std::vector<std::string> redisStrings;
 
 public:
     StarFile();

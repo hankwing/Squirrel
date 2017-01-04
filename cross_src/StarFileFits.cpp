@@ -64,6 +64,8 @@ StarFileFits::StarFileFits(const char* fileName, float areaBox, int fitsHDU,
 		int wcsext, int fluxRatioSDTimes, float magErrThreshold, int gridX,
 		int gridY) {
 
+	this->fieldHeight = 0;
+	this->fieldWidth = 0;
 	this->fileExist = 0;
 	this->showProcessInfo = 0;
 	this->airmass = 0.0;
@@ -87,8 +89,11 @@ StarFileFits::StarFileFits(const char* fileName, float areaBox, int fitsHDU,
 
 StarFileFits::StarFileFits(const char* fileName, float areaBox, int fitsHDU,
 		int wcsext, int fluxRatioSDTimes, float magErrThreshold, int gridX,
-		int gridY, acl::redis_client_cluster *conn) {
+		int gridY, acl::redis_client_cluster *conn, const char* redisHost) {
 
+	this->fieldHeight = 0;
+	this->fieldWidth = 0;
+	this->redisHost = redisHost;
 	this->conn = conn;
 	this->fileExist = 0;
 	this->showProcessInfo = 0;
@@ -352,6 +357,9 @@ void StarFileFits::readStar(bool isRef) {
  */
 void StarFileFits::readStar(const char * fileName, bool isRef) {
 
+	if( isRef) {
+		starDataCache.resize(180001);
+	}
 	//fitsfile *fptr; /* pointer to the FITS file, defined in fitsio.h */
 	std::ifstream starFile(fileName);
 	if (!starFile) {

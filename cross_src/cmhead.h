@@ -101,7 +101,7 @@ public:
     					ellipticity, flags, mag, mage, magnorm, fwhm, magcalib, magcalibe, pixx,
     					pixy, pixx1, pixy1, thetaimage, vignet, error, inarea, fluxRatio,
     					matchNum, gridIdx, fluxVarTag);*/
-    	sprintf(starInfo, "%s:%s %s", redisKey, redisKey, raw_info);
+    	sprintf(starInfo, "%s %s", redisKey, raw_info);
     }
 
     ~CMStar() {

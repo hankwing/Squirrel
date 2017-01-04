@@ -39,7 +39,7 @@ public:
     virtual ~Partition();
 
     void partitonStarField(StarFile *starFile);
-    int getMatchStar(CMStar *objStar);
+    std::pair<int, std::string> getMatchStar(CMStar *objStar);
     void printZoneDetail(char *fName);
     void freeZoneArray();
 

@@ -22,9 +22,7 @@
 #include "StarFileFits.h"
 #include "CrossMatchSphere.h"
 #include "CrossMatch.h"
-#include "JNIExample.h"
 #include "NamedPipe.h"
-#include <jni.h>
 #include "acl_cpp/lib_acl.hpp"
 
 #define TestCrossMatch1
@@ -78,6 +76,7 @@ acl::redis_client_cluster *cluster;
 static const char* redisHost = (char*) malloc(sizeof(char*) * 30);
 int crossTime = 0;
 int threadNum = 5;
+int sendNumControl = 0;
 // mutex controing threads
 
 
@@ -119,145 +118,6 @@ void RedisInit() {
 	cluster->init(NULL, redisHost, max_conns, conn_timeout, rw_timeout);
 
 	//cluster->set(redisHost, conn_timeout, rw_timeout, max_conns);
-}
-
-JNIEXPORT jstring JNICALL Java_JNIExample_jniCross(JNIEnv *env, jobject obj,
-		jstring tempDataPath, jstring objDataPath) {
-
-	const char* constRefFile = env->GetStringUTFChars(tempDataPath, 0);
-	const char* constObjFile = env->GetStringUTFChars(objDataPath, 0);
-	//char command[81];
-	int wcsext = 2;
-	float magErrThreshold = 0.05; //used by getMagDiff
-	float minZoneLen = areaBox * 10;
-	float searchRds = areaBox;
-	struct timeval start, end;
-	long int time_use = 0;
-	CrossMatch *cm = NULL;
-
-	if( refStarFile == NULL) {
-		refStarFile = new StarFileFits((char*) constRefFile, areaBox, fitsHDU,
-					wcsext, fluxRatioSDTimes, magErrThreshold, gridX, gridY, cluster);
-
-		refStarFile->readStar(true);
-		//refStarFile->readStar(false);
-		refStarFile->readProerty();
-		zones = new Partition(areaBox, minZoneLen, searchRds);
-		zones->partitonStarField(refStarFile);
-	}
-
-	//scanf("%s", command);
-	//while (strcmp(command, "exit") != 0) {
-
-	if (method == PLANE_METHOD) {
-		if (areaWidth == 0 || areaHeight == 0) {
-			printf(
-					"in plane coordinate mode, must assign \"-width\" and \"-height\"\n");
-		}
-		//#ifndef TestCrossMatch
-		//mainPlane(refFile, objFile, outFile);
-
-		printf("starting plane cross match...\n");
-
-		gettimeofday(&start,NULL);
-
-		//dataStore->store(refStarFile, 1);
-
-		objStarFile = new StarFileFits((char*) constObjFile, areaBox, fitsHDU,
-				wcsext, fluxRatioSDTimes, magErrThreshold, gridX, gridY);
-		objStarFile->readStar(false);
-		objStarFile->readProerty();
-		objStarFile->setFieldWidth(areaWidth);
-		objStarFile->setFieldHeight(areaHeight);
-
-		cm = new CrossMatch();
-		cm->setFieldHeight(areaHeight);
-		cm->setFieldWidth(areaWidth);
-		//目前minZoneLength和searchRadius没有考虑
-		// core code!!
-		cm->match(refStarFile, objStarFile, zones, areaBox);
-		objStarFile->getMagDiff();
-		objStarFile->fluxNorm();
-		objStarFile->tagFluxLargeVariation();
-		objStarFile->judgeInAreaPlane();
-		//dataStore->store(objStarFile, 0);
-		//cm->printMatchedRst(outFile, objStarFile, areaBox);
-		//delete refStarFile;
-
-		gettimeofday(&end, NULL);
-		time_use =(end.tv_sec-start.tv_sec)*1000000+(end.tv_usec-start.tv_usec);//微秒
-		printf("total time is: %ld\n", time_use);
-		/*
-		 #else
-		 mainPlaneTest(refFile, objFile, outFile);
-		 #endif
-		 } else {
-		 #ifndef TestCrossMatch
-		 mainSphere(refFile, objFile, outFile);
-		 #else
-		 mainSphereTest(refFile, objFile, outFile);
-		 #endif
-		 */
-	}
-
-	//scanf("%s", command);
-	//}
-
-	//dataStore->matchOTFlag = matchOT;
-
-	//if (dbConfigInCommandLine == 0) {
-	//  dataStore->readDbInfo(configFile);
-	//} else {
-	//  getDBInfo(cmdDbInfo, dataStore);
-	//}
-
-	//free(cmdDbInfo);
-	//free(refFile);
-	////free(objFile);
-	//free(outFile);
-	//free(configFile);
-	char resultString[50];
-	sprintf(resultString, "time:%ld matchedStar:%d OTStar:%d", time_use,
-			objStarFile->matchedCount,
-			objStarFile->OTStarCount);
-	printf("%s\n", resultString);
-
-	delete cm;
-	delete objStarFile;
-	return env->NewStringUTF(resultString);
-
-
-}
-
-JNIEXPORT void JNICALL Java_JNIExample_jniCrossInit(JNIEnv *env,
-		jobject obj, jstring redisHostPort) {
-
-	setDefaultValue();
-
-	cmdDbInfo = (char*) malloc(LINE);
-	memset(cmdDbInfo, 0, LINE);
-
-	redisHost = env->GetStringUTFChars(redisHostPort, 0);
-
-	//printf("refData: %s, objData:%s\n", constRefFile, constObjFile);
-	//refFile = (char*) malloc(LINE);
-	//memset(refFile, 0, LINE);
-	//objFile = (char*) malloc(LINE);
-	//memset(objFile, 0, LINE);
-	//outFile = (char*) malloc(LINE);
-	//memset(outFile, 0, LINE);
-	//configFile = (char*) malloc(LINE);
-	//memset(configFile, 0, LINE);
-
-	//dataStore = new StoreDataPostgres();
-	// init alluxio utils
-	RedisInit();
-
-	// add by wzj
-
-	//delete dataStore;
-
-	//return 0;
 }
 
 static void * crossThread( void * command) {
@@ -304,8 +164,7 @@ static void * crossThread( void * command) {
 		//dataStore->store(objStarFile, 0);
 		//cm->printMatchedRst(outFile, objStarFile, areaBox);
 		gettimeofday(&end, NULL);
-		printf("cross time: %lf\n", ((end.tv_sec-start.tv_sec)*1000000+(end.tv_usec-start.tv_usec)));
-		cm->sendResultsToRedis(cluster, objStarFile, threadNum);
+		cm->sendResultsToRedis(cluster, refStarFile, threadNum, sendNumControl);
 
 		delete cm;
 		delete objStarFile;
@@ -329,17 +188,7 @@ static void * crossThread( void * command) {
 			sleep(10);
 		}
 		cmd.clear();
-		/*
-		 #else
-		 mainPlaneTest(refFile, objFile, outFile);
-		 #endif
-		 } else {
-		 #ifndef TestCrossMatch
-		 mainSphere(refFile, objFile, outFile);
-		 #else
-		 mainSphereTest(refFile, objFile, outFile);
-		 #endif
-		 */
+
 	}
 
 	return NULL;
@@ -378,7 +227,7 @@ int main(int argc, char** argv) {
 
 	// refStar stay in memory
 	refStarFile = new StarFileFits(refFile, areaBox, fitsHDU, wcsext,
-			fluxRatioSDTimes, magErrThreshold, gridX, gridY, cluster);
+			fluxRatioSDTimes, magErrThreshold, gridX, gridY, cluster, redisHost);
 
 	refStarFile->readStar(true);
 	//refStarFile->readStar(false);

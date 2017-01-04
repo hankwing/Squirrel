@@ -7,17 +7,18 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 #include <string>
 #include <vector>
 #include <math.h>
 #include <time.h>
 #include <unistd.h>
+#include "StarFileFits.h"
 #include "CrossMatch.h"
 
 typedef struct parameters {
 	acl::redis_client_cluster *cluster;
-	std::vector<std::string> *sendList;
+	std::vector<std::vector<std::string> > *sendList;
+	StarFileFits* fitsFile;
 	int lo;
 	int hi;
 } parameters;
@@ -75,10 +76,12 @@ void CrossMatch::match(StarFile *refStarFile, StarFile *objStarFile,Partition * 
   CMStar *nextStar = objStarFile->starList;
   while (nextStar) {
       // core code!!
-    if(zones->getMatchStar(nextStar) == 0) {
+	  std::pair<int, std::string> matchResult = zones->getMatchStar(nextStar);
+    if(matchResult.first == -1) {
 
     	objStarFile->OTStarCount ++;
     } else {
+    	refStarFile->starDataCache[matchResult.first].push_back(matchResult.second);
     	objStarFile->matchedCount ++;
     }
     if( nextStar->mag >= 50) objStarFile->abStar ++;
@@ -96,27 +99,36 @@ static void* singleSendThread( void * arg) {
 	int failedTime = 0;
 	int lo = pms->lo;
 	int hi = pms->hi;
-	std::vector<std::string> *sendList = pms->sendList;
+	std::vector<std::vector<std::string> > *sendList = pms->sendList;
 
 	acl::redis cmd;
 	cmd.set_cluster(pms->cluster, 1000);
 	for( int i = lo; i < hi; i++) {
-		failedTime = 0;
-		std::string sendString = sendList->at(i);
-		int keyIndex = sendString.find(':');
-		std::string key = sendString.substr(0, keyIndex);
-		std::string value = sendString.substr(keyIndex+1);
-		while( cmd.rpush(key.c_str(), value.c_str(), NULL) < 0) {
-			printf("insert failed because %s\n", cmd.result_error());
-			if( failedTime ++ > 5) {
+		if( sendList->at(i).size() == 0) {
+			// if i is null
+			continue;
+		}
 
-				pms->cluster->set("192.168.0.93:7016", 10, 10, 1000);
+		failedTime = 0;
+		std::vector<const char *> sendStringList;
+		int keyIndex = sendList->at(i)[0].find_first_of(' ');
+		std::string key = sendList->at(i)[0].substr(0, keyIndex);
+		for( auto sendString : sendList->at(i)) {
+			sendStringList.push_back(sendString.c_str());
+		}
+		//std::string value = sendString.substr(keyIndex+1);
+		while( cmd.rpush(key.c_str(), sendStringList) < 0) {
+			printf("insert failed because %s %d\n", cmd.result_error(), i);
+			if( failedTime ++ > 5) {
+				pms->cluster->set(pms->fitsFile->redisHost, 10, 10, 1000);
 				cmd.set_cluster(pms->cluster, 1000);
 				sleep(3);
 			}
 		}
+		sendList->at(i).clear();
 		//cmd.rpush(key.c_str(), value.c_str(), NULL);
 		cmd.clear();
+
 	}
 
 	return NULL;
@@ -127,17 +139,23 @@ static void* singleSendThread( void * arg) {
  * send matched results to redis using multiple threads
  */
 void CrossMatch::sendResultsToRedis(acl::redis_client_cluster *cluster,
-		StarFile *objStars, int usedThreads) {
+		StarFileFits *refStars, int usedThreads, int& control) {
 	pthread_attr_t attrs[usedThreads];
 	pthread_t ids[usedThreads];
 	parameters pms[usedThreads];
-	int steps = objStars->redisStrings.size() / usedThreads;
+	int steps = refStars->starDataCache.size() / usedThreads;
+	int start = control * steps + 1;
+	control = (control + 1) % usedThreads;
+	int end = start + steps;
+	steps = ( end - start) / usedThreads;
+
 	int i = 0;
 
 	for( i = 0; i <  usedThreads - 1; i++) {
+		pms[i].fitsFile = refStars;
 		pms[i].cluster = cluster;
-		pms[i].sendList = &objStars->redisStrings;
-		pms[i].lo = i * steps;
+		pms[i].sendList = &refStars->starDataCache;
+		pms[i].lo = start + i * steps;
 		pms[i].hi = pms[i].lo + steps;
 
 		pthread_attr_init(&attrs[i]);
@@ -147,10 +165,11 @@ void CrossMatch::sendResultsToRedis(acl::redis_client_cluster *cluster,
 
 	}
 
+	pms[i].fitsFile = refStars;
 	pms[i].cluster = cluster;
-	pms[i].sendList = &objStars->redisStrings;
-	pms[i].lo = i * steps;
-	pms[i].hi = objStars->redisStrings.size();
+	pms[i].sendList = &refStars->starDataCache;
+	pms[i].lo = start + i * steps;
+	pms[i].hi = end;
 	pthread_attr_init(&attrs[i]);
 	// create first thread
 	pthread_create(&ids[i], &attrs[i], singleSendThread, &pms[i]);

@@ -39,7 +39,7 @@ public:
     void partitionAndNoPartitionCompare();
     void setFieldHeight(float fieldHeight);
     void setFieldWidth(float fieldWidth);
-    void sendResultsToRedis(acl::redis_client_cluster *cluster, StarFile *objStars, int usedThreads);
+    void sendResultsToRedis(acl::redis_client_cluster *cluster, StarFileFits *objStars, int usedThreads, int& control);
 
 protected:
 

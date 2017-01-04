@@ -9,6 +9,8 @@
 #define	STARFILEREF_H
 
 #include "StarFile.h"
+#include <vector>
+#include <string>
 #include "acl_cpp/lib_acl.hpp"
 
 class AreaBox {
@@ -65,6 +67,8 @@ public:
   FluxPartition *fluxPtn;
   //alluxio::jAlluxioFileSystem alluxioClient;
   acl::redis_client_cluster *conn = NULL;
+  const char* redisHost = NULL;
+  // save temp star data
 
   StarFileFits();
   StarFileFits(const char * fileName);
@@ -72,7 +76,7 @@ public:
             int fluxRatioSDTimes, float magErrThreshold, int gridX, int gridY);
   StarFileFits( const char* fileName, float areaBox, int fitsHDU, int wcsext,
               int fluxRatioSDTimes, float magErrThreshold, int gridX, int gridY,
-			  acl::redis_client_cluster *conn);
+			  acl::redis_client_cluster *conn, const char* redisHost);
   StarFileFits(const StarFileFits& orig);
   virtual ~StarFileFits();
 

@@ -30,34 +30,34 @@ public:
 	/////////////////////////////////////////////////////////////////////
 
 	/**
-	 * ´Ó key ÁÐ±í¶ÔÏóÖÐµ¯³öÒ»¸öÔªËØ¶ÔÏó£¨name/value¶Ô£©£¬²ÉÓÃ×èÈû·½Ê½´ÓÍ·²¿µ¯³ö£»
-	 * µ±¸ø¶¨¶à¸ö key ²ÎÊýÊ±£¬°´²ÎÊý key µÄÏÈºóË³ÐòÒÀ´Î¼ì²é¸÷¸öÁÐ±í£¬µ¯³öµÚÒ»¸ö
-	 * ·Ç¿ÕÁÐ±íµÄÍ·ÔªËØ
+	 * ï¿½ï¿½ key ï¿½Ð±ï¿½ï¿½ï¿½ï¿½ï¿½Ðµï¿½ï¿½ï¿½Ò»ï¿½ï¿½Ôªï¿½Ø¶ï¿½ï¿½ï¿½name/valueï¿½Ô£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê½ï¿½ï¿½Í·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	 * ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ key ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ key ï¿½ï¿½ï¿½Èºï¿½Ë³ï¿½ï¿½ï¿½ï¿½ï¿½Î¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½
+	 * ï¿½Ç¿ï¿½ï¿½Ð±ï¿½ï¿½Í·Ôªï¿½ï¿½
 	 * remove and get a element from list head, or block until one
 	 * is available; when multiple keys were given, multiple elements
 	 * will be gotten according the sequence of keys given.
-	 * @param result {std::pair<string, string>&} ´æ´¢½á¹ûÔªËØ¶ÔÏó£¬¸Ã¶ÔÏóµÄ
-	 *  µÚÒ»¸ö×Ö·û´®±íÊ¾ÊÇÁÐ±í¶ÔÏóµÄ key£¬µÚ¶þ¸öÎª¸Ã¶ÔÏóµÄÍ·²¿ÔªËØ
+	 * @param result {std::pair<string, string>&} ï¿½æ´¢ï¿½ï¿½ï¿½Ôªï¿½Ø¶ï¿½ï¿½ó£¬¸Ã¶ï¿½ï¿½ï¿½ï¿½
+	 *  ï¿½ï¿½Ò»ï¿½ï¿½ï¿½Ö·ï¿½ï¿½ï¿½ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½Ð±ï¿½ï¿½ï¿½ï¿½ï¿½ keyï¿½ï¿½ï¿½Ú¶ï¿½ï¿½ï¿½Îªï¿½Ã¶ï¿½ï¿½ï¿½ï¿½Í·ï¿½ï¿½Ôªï¿½ï¿½
 	 *  store the elements result, the first string of pair is the key,
 	 *  and the second string of pair is the element
-	 * @param timeout {size_t} µÈ´ý×èÈûÊ±¼ä£¨Ãë£©£¬ÔÚ³¬Ê±Ê±¼äÄÚÃ»ÓÐ»ñµÃÔªËØ¶ÔÏó£¬
-	 *  Ôò·µ»Ø false£»Èç¹û¸ÃÖµÎª 0 ÔòÒ»Ö±µÈ´ýÖÁ»ñµÃÔªËØ¶ÔÏó»ò³ö´í
+	 * @param timeout {size_t} ï¿½È´ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ä£¨ï¿½ë£©ï¿½ï¿½ï¿½Ú³ï¿½Ê±Ê±ï¿½ï¿½ï¿½ï¿½Ã»ï¿½Ð»ï¿½ï¿½Ôªï¿½Ø¶ï¿½ï¿½ï¿½
+	 *  ï¿½ò·µ»ï¿½ falseï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÖµÎª 0 ï¿½ï¿½Ò»Ö±ï¿½È´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ôªï¿½Ø¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	 *  the blocking timeout in seconds before one element availble;
 	 *  false will be returned when the timeout is arrived; if the timeout
 	 *  was set to be 0, this function will block until a element was
 	 *  available or some error happened.
-	 * @param first_key {const char*} µÚÒ»¸ö·Ç¿Õ×Ö·û´®µÄ key ¼ü£¬×îºóÒ»¸ö²ÎÊý
-	 *  ±ØÐëÒÔ NULL ½áÊø£¬±íÊ¾±ä²ÎÁÐ±íµÄ½áÊø
+	 * @param first_key {const char*} ï¿½ï¿½Ò»ï¿½ï¿½ï¿½Ç¿ï¿½ï¿½Ö·ï¿½ï¿½ï¿½ï¿½ï¿½ key ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	 *  ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ NULL ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½ï¿½Ð±ï¿½Ä½ï¿½ï¿½ï¿½
 	 *  the first key of a variable args, the last arg must be NULL
 	 *  indicating the end of the variable args.
-	 * @return {bool} ÊÇ·ñ»ñµÃÁËÍ·²¿ÔªËØ¶ÔÏó£¬Èç¹û·µ»Ø false ÔòÓÐÒÔÏÂ¿ÉÄÜÔ­Òò£º
+	 * @return {bool} ï¿½Ç·ï¿½ï¿½ï¿½ï¿½ï¿½Í·ï¿½ï¿½Ôªï¿½Ø¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ false ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â¿ï¿½ï¿½ï¿½Ô­ï¿½ï¿½
 	 *  true if got a element in the head of list, when false was be
 	 *  returned, there'are some reasons show below:
-	 *  1¡¢³ö´í
+	 *  1ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	 *     error happened.
-	 *  2¡¢ÓÐÒ»¸ö key ·ÇÁÐ±í¶ÔÏó
+	 *  2ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ key ï¿½ï¿½ï¿½Ð±ï¿½ï¿½ï¿½ï¿½
 	 *     at least one key was not a list object.
-	 *  3¡¢key ²»´æÔÚ»ò³¬Ê±Î´»ñµÃÔªËØ¶ÔÏó
+	 *  3ï¿½ï¿½key ï¿½ï¿½ï¿½ï¿½ï¿½Ú»ï¿½Ê±Î´ï¿½ï¿½ï¿½Ôªï¿½Ø¶ï¿½ï¿½ï¿½
 	 *     key not exist or timeout was got.
 
 	 */
@@ -69,7 +69,7 @@ public:
 		std::pair<string, string>& result);
 
 	/**
-	 * º¬Òå²Î¼û blpop£¬Î¨Ò»Çø±ðÎª¸Ã·½·¨µ¯³öÎ²²¿ÔªËØ¶ÔÏó
+	 * ï¿½ï¿½ï¿½ï¿½Î¼ï¿½ blpopï¿½ï¿½Î¨Ò»ï¿½ï¿½ï¿½ï¿½Îªï¿½Ã·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Î²ï¿½ï¿½Ôªï¿½Ø¶ï¿½ï¿½ï¿½
 	 * the meaning is same as the blpop above except that this function
 	 * is used to pop element from the tail of the list
 	 * @see blpop
@@ -82,23 +82,23 @@ public:
 		std::pair<string, string>& result);
 
 	/**
-	 * ×èÈûÊ½Ö´ÐÐÒÔÏÂÁ½¸ö¶¯×÷£º
-	 * 1) ½«ÁÐ±í src ÖÐµÄ×îºóÒ»¸öÔªËØ(Î²ÔªËØ)µ¯³ö£¬²¢·µ»Ø¸ø¿Í»§¶Ë¡£
-	 * 2) ½« src µ¯³öµÄÔªËØ²åÈëµ½ÁÐ±í dst £¬×÷Îª dst ÁÐ±íµÄµÄÍ·ÔªËØ
+	 * ï¿½ï¿½ï¿½ï¿½Ê½Ö´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	 * 1) ï¿½ï¿½ï¿½Ð±ï¿½ src ï¿½Ðµï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½Ôªï¿½ï¿½(Î²Ôªï¿½ï¿½)ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ø¸ï¿½ï¿½Í»ï¿½ï¿½Ë¡ï¿½
+	 * 2) ï¿½ï¿½ src ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ôªï¿½Ø²ï¿½ï¿½ëµ½ï¿½Ð±ï¿½ dst ï¿½ï¿½ï¿½ï¿½Îª dst ï¿½Ð±ï¿½Äµï¿½Í·Ôªï¿½ï¿½
 	 * two actions will be executed in blocking mode as below:
 	 * 1) pop a element from src list's tail, and return it to caller
 	 * 2) push the element to dst list's head
-	 * @param src {const char*} Ô´ÁÐ±í¶ÔÏó key
+	 * @param src {const char*} Ô´ï¿½Ð±ï¿½ï¿½ï¿½ï¿½ key
 	 *  the key of source list
-	 * @param dst {const char*} Ä¿±êÁÐ±í¶ÔÏó key
+	 * @param dst {const char*} Ä¿ï¿½ï¿½ï¿½Ð±ï¿½ï¿½ï¿½ï¿½ key
 	 *  the key of destination list
-	 * @param buf {string*} ·Ç¿ÕÊ±´æ´¢ src µÄÎ²²¿ÔªËØ key Öµ
+	 * @param buf {string*} ï¿½Ç¿ï¿½Ê±ï¿½æ´¢ src ï¿½ï¿½Î²ï¿½ï¿½Ôªï¿½ï¿½ key Öµ
 	 *  if not NULL, buf will store the element poped from the head of src
-	 * @param timeout {size_t} µÈ´ý³¬Ê±Ê±¼ä£¬Èç¹ûÎª 0 ÔòÒ»Ö±µÈ´ýÖ±µ½ÓÐÊý¾Ý»ò³ö´í
+	 * @param timeout {size_t} ï¿½È´ï¿½ï¿½ï¿½Ê±Ê±ï¿½ä£¬ï¿½ï¿½ï¿½Îª 0 ï¿½ï¿½Ò»Ö±ï¿½È´ï¿½Ö±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ý»ï¿½ï¿½ï¿½ï¿½
 	 *  the timeout to wait, if the timeout is 0 this function will
 	 *  block until a element was available or error happened.
-	 * @return {bool} µ±´Ó src ÁÐ±íÖÐ³É¹¦µ¯³öÎ²²¿ÔªËØ²¢·ÅÈë dst ÁÐ±íÍ·²¿ºó
-	 *  ¸Ã·½·¨·µ»Ø true£»·µ»Ø false ±íÊ¾³¬Ê±¡¢³ö´í»ò src/dst ÓÐÒ»¸ö·ÇÁÐ±í¶ÔÏó
+	 * @return {bool} ï¿½ï¿½ï¿½ï¿½ src ï¿½Ð±ï¿½ï¿½Ð³É¹ï¿½ï¿½ï¿½ï¿½ï¿½Î²ï¿½ï¿½Ôªï¿½Ø²ï¿½ï¿½ï¿½ï¿½ï¿½ dst ï¿½Ð±ï¿½Í·ï¿½ï¿½ï¿½ï¿½
+	 *  ï¿½Ã·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ trueï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ false ï¿½ï¿½Ê¾ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ src/dst ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½Ð±ï¿½ï¿½ï¿½ï¿½
 	 *  true if success, false if timeout arrived, or error happened,
 	 *  or one of the src and dst is not a list object
 	 * @see rpoplpush
@@ -107,35 +107,35 @@ public:
 		string* buf = NULL);
 
 	/**
-	 * ·µ»Ø key ¶ÔÓ¦µÄÁÐ±í¶ÔÏóÖÐ£¬Ö¸¶¨ÏÂ±êµÄÔªËØ
+	 * ï¿½ï¿½ï¿½ï¿½ key ï¿½ï¿½Ó¦ï¿½ï¿½ï¿½Ð±ï¿½ï¿½ï¿½ï¿½ï¿½Ð£ï¿½Ö¸ï¿½ï¿½ï¿½Â±ï¿½ï¿½Ôªï¿½ï¿½
 	 * return the element of the specified subscript from the list at key
-	 * @param key {const char*} ÁÐ±í¶ÔÏóµÄ key
+	 * @param key {const char*} ï¿½Ð±ï¿½ï¿½ï¿½ï¿½ï¿½ key
 	 *  the key of one list object
-	 * @param idx {size_t} ÏÂ±êÖµ
+	 * @param idx {size_t} ï¿½Â±ï¿½Öµ
 	 *  the specified subscript
-	 * @param buf {string&} ´æ´¢½á¹û
+	 * @param buf {string&} ï¿½æ´¢ï¿½ï¿½ï¿½
 	 *  store the result
-	 * @return {bool} ·µ»Ø true ±íÃ÷²Ù×÷³É¹¦£¬´ËÊ±Èô buf Êý¾Ý·Ç¿ÕÔò±íÃ÷ÕýÈ·»ñµÃÁË
-	 *  Ö¸¶¨ÏÂ±êµÄÔªËØ£¬Èç¹û buf.empty()±íÊ¾Ã»ÓÐ»ñµÃÔªËØ£»·µ»Ø false Ê±±íÃ÷²Ù×÷Ê§°Ü
+	 * @return {bool} ï¿½ï¿½ï¿½ï¿½ true ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½É¹ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ buf ï¿½ï¿½ï¿½Ý·Ç¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È·ï¿½ï¿½ï¿½ï¿½ï¿½
+	 *  Ö¸ï¿½ï¿½ï¿½Â±ï¿½ï¿½Ôªï¿½Ø£ï¿½ï¿½ï¿½ï¿½ buf.empty()ï¿½ï¿½Ê¾Ã»ï¿½Ð»ï¿½ï¿½Ôªï¿½Ø£ï¿½ï¿½ï¿½ï¿½ï¿½ false Ê±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê§ï¿½ï¿½
 	 *  true if success, and if buf is empty, no element was got;
 	 *  false if error happened
 	 */
 	bool lindex(const char* key, size_t idx, string& buf);
 
 	/**
-	 * ÔÚÁÐ±í¶ÔÏóÖÐ½«Ò»¸öÐÂÔªËØÌí¼ÓÖÁÖ¸¶¨ÔªËØµÄÇ°Ãæ
+	 * ï¿½ï¿½ï¿½Ð±ï¿½ï¿½ï¿½ï¿½ï¿½Ð½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½Ôªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö¸ï¿½ï¿½Ôªï¿½Øµï¿½Ç°ï¿½ï¿½
 	 * insert one new element before the specified element in list
-	 * @param key {const char*} ÁÐ±í¶ÔÏóµÄ key
+	 * @param key {const char*} ï¿½Ð±ï¿½ï¿½ï¿½ï¿½ï¿½ key
 	 *  the key of specified list
-	 * @param pivot {const char*} ÁÐ±í¶ÔÏóÖÐµÄÒ»¸öÖ¸¶¨ÔªËØÃû
+	 * @param pivot {const char*} ï¿½Ð±ï¿½ï¿½ï¿½ï¿½ï¿½Ðµï¿½Ò»ï¿½ï¿½Ö¸ï¿½ï¿½Ôªï¿½ï¿½ï¿½ï¿½
 	 *  the speicifed element of list
-	 * @param value {const char*} ÐÂµÄÔªËØÃû
+	 * @param value {const char*} ï¿½Âµï¿½Ôªï¿½ï¿½ï¿½ï¿½
 	 *  the new element to be inserted
-	 * @reutrn {int} ·µ»Ø¸ÃÁÐ±í¶ÔÏóµÄÔªËØ¸öÊý£¬º¬ÒåÈçÏÂ£º
+	 * @reutrn {int} ï¿½ï¿½ï¿½Ø¸ï¿½ï¿½Ð±ï¿½ï¿½ï¿½ï¿½ï¿½Ôªï¿½Ø¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â£ï¿½
 	 *  return the number of list specified by the given key, as below:
-	 *  -1 -- ±íÊ¾³ö´í»ò key ·ÇÁÐ±í¶ÔÏó
+	 *  -1 -- ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½ï¿½ï¿½ key ï¿½ï¿½ï¿½Ð±ï¿½ï¿½ï¿½ï¿½
 	 *        error happened or the object of the key is not a list
-	 *  >0 -- µ±Ç°ÁÐ±í¶ÔÏóµÄÔªËØ¸öÊý
+	 *  >0 -- ï¿½ï¿½Ç°ï¿½Ð±ï¿½ï¿½ï¿½ï¿½ï¿½Ôªï¿½Ø¸ï¿½ï¿½ï¿½
 	 *        the number of elements of the specified list
 	 */
 	int linsert_before(const char* key, const char* pivot,
@@ -144,19 +144,19 @@ public:
 		size_t pivot_len, const char* value, size_t value_len);
 
 	/**
-	 * ÔÚÁÐ±í¶ÔÏóÖÐ½«Ò»¸öÐÂÔªËØÌí¼ÓÖÁÖ¸¶¨ÔªËØµÄºóÃæ
+	 * ï¿½ï¿½ï¿½Ð±ï¿½ï¿½ï¿½ï¿½ï¿½Ð½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½Ôªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö¸ï¿½ï¿½Ôªï¿½ØµÄºï¿½ï¿½ï¿½
 	 * append a new element after the specified element in the list
-	 * @param key {const char*} ÁÐ±í¶ÔÏóµÄ key
+	 * @param key {const char*} ï¿½Ð±ï¿½ï¿½ï¿½ï¿½ï¿½ key
 	 *  the key of the specified list
-	 * @param pivot {const char*} ÁÐ±í¶ÔÏóÖÐµÄÒ»¸öÖ¸¶¨ÔªËØÃû
+	 * @param pivot {const char*} ï¿½Ð±ï¿½ï¿½ï¿½ï¿½ï¿½Ðµï¿½Ò»ï¿½ï¿½Ö¸ï¿½ï¿½Ôªï¿½ï¿½ï¿½ï¿½
 	 *  the specified element
-	 * @param value {const char*} ÐÂµÄÔªËØÃû
+	 * @param value {const char*} ï¿½Âµï¿½Ôªï¿½ï¿½ï¿½ï¿½
 	 *  the new element
-	 * @reutrn {int} ·µ»Ø¸ÃÁÐ±í¶ÔÏóµÄÔªËØ¸öÊý£¬º¬ÒåÈçÏÂ£º
+	 * @reutrn {int} ï¿½ï¿½ï¿½Ø¸ï¿½ï¿½Ð±ï¿½ï¿½ï¿½ï¿½ï¿½Ôªï¿½Ø¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â£ï¿½
 	 *  return the number of elements in the list specifed by the key:
-	 *  -1 -- ±íÊ¾³ö´í»ò key ·ÇÁÐ±í¶ÔÏó
+	 *  -1 -- ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½ï¿½ï¿½ key ï¿½ï¿½ï¿½Ð±ï¿½ï¿½ï¿½ï¿½
 	 *        error happened or it is not a list object specified by key
-	 *  >0 -- µ±Ç°ÁÐ±í¶ÔÏóµÄÔªËØ¸öÊý
+	 *  >0 -- ï¿½ï¿½Ç°ï¿½Ð±ï¿½ï¿½ï¿½ï¿½ï¿½Ôªï¿½Ø¸ï¿½ï¿½ï¿½
 	 *        the number of elements in list specified by the key
 	 */
 	int linsert_after(const char* key, const char* pivot,
@@ -165,24 +165,24 @@ public:
 		size_t pivot_len, const char* value, size_t value_len);
 
 	/**
-	 * ·µ»ØÖ¸¶¨ÁÐ±í¶ÔÏóµÄÔªËØ¸öÊý
+	 * ï¿½ï¿½ï¿½ï¿½Ö¸ï¿½ï¿½ï¿½Ð±ï¿½ï¿½ï¿½ï¿½ï¿½Ôªï¿½Ø¸ï¿½ï¿½ï¿½
 	 * get the number of elements in list specified the given key
-	 * @param key {const char*} ÁÐ±í¶ÔÏóµÄ key
+	 * @param key {const char*} ï¿½Ð±ï¿½ï¿½ï¿½ï¿½ï¿½ key
 	 *  the list's key
-	 * @return {int} ·µ»ØÖ¸¶¨ÁÐ±í¶ÔÏóµÄ³¤¶È£¨¼´ÔªËØ¸öÊý£©£¬ -1 if error happened
+	 * @return {int} ï¿½ï¿½ï¿½ï¿½Ö¸ï¿½ï¿½ï¿½Ð±ï¿½ï¿½ï¿½ï¿½Ä³ï¿½ï¿½È£ï¿½ï¿½ï¿½Ôªï¿½Ø¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ -1 if error happened
 	 *  return the number of elements in list, -1 if error
 	 */
 	int llen(const char* key);
 
 	/**
-	 * ´ÓÁÐ±í¶ÔÏóÖÐÒÆ³ý²¢·µ»ØÍ·²¿ÔªËØ
+	 * ï¿½ï¿½ï¿½Ð±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ³ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í·ï¿½ï¿½Ôªï¿½ï¿½
 	 * remove and get the element in the list's head
-	 * @param key {const char*} ÔªËØ¶ÔÏóµÄ key
+	 * @param key {const char*} Ôªï¿½Ø¶ï¿½ï¿½ï¿½ï¿½ key
 	 *  the key of one list
-	 * @param buf {string&} ´æ´¢µ¯³öµÄÔªËØÖµ
+	 * @param buf {string&} ï¿½æ´¢ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ôªï¿½ï¿½Öµ
 	 *  store the element when successful.
-	 * @return {int} ·µ»ØÖµº¬Òå£º1 -- ±íÊ¾³É¹¦µ¯³öÒ»¸öÔªËØ£¬-1 -- ±íÊ¾³ö´í£¬»ò¸Ã
-	 *  ¶ÔÏó·ÇÁÐ±í¶ÔÏó£¬»ò¸Ã¶ÔÏóÒÑ¾­Îª¿Õ
+	 * @return {int} ï¿½ï¿½ï¿½ï¿½Öµï¿½ï¿½ï¿½å£º1 -- ï¿½ï¿½Ê¾ï¿½É¹ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½Ôªï¿½Ø£ï¿½-1 -- ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	 *  ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð±ï¿½ï¿½ï¿½ó£¬»ï¿½Ã¶ï¿½ï¿½ï¿½ï¿½Ñ¾ï¿½Îªï¿½ï¿½
 	 *  return value as below:
 	 *   1: get one element successfully
 	 *  -1: error happened, or the oject is not a list specified
@@ -191,16 +191,16 @@ public:
 	int lpop(const char* key, string& buf);
 
 	/**
-	 * ½«Ò»¸ö»ò¶à¸öÖµÔªËØ²åÈëµ½ÁÐ±í¶ÔÏó key µÄ±íÍ·
+	 * ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÖµÔªï¿½Ø²ï¿½ï¿½ëµ½ï¿½Ð±ï¿½ï¿½ï¿½ï¿½ key ï¿½Ä±ï¿½Í·
 	 * add one or more element(s) to the head of a list
-	 * @param key {const char*} ÁÐ±í¶ÔÏóµÄ key
+	 * @param key {const char*} ï¿½Ð±ï¿½ï¿½ï¿½ï¿½ï¿½ key
 	 *  the list key
-	 * @param first_value {const char*} µÚÒ»¸ö·Ç¿Õ×Ö·û´®£¬¸Ã±ä²ÎµÄÁÐ±íµÄ×îºóÒ»¸ö
-	 *  ±ØÐëÉèÎª NULL
+	 * @param first_value {const char*} ï¿½ï¿½Ò»ï¿½ï¿½ï¿½Ç¿ï¿½ï¿½Ö·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ã±ï¿½Îµï¿½ï¿½Ð±ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½
+	 *  ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Îª NULL
 	 *  the first no-NULL element of the variable args, the last arg must
 	 *  be NULL indicating the end of the args.
-	 * @return {int} ·µ»ØÌí¼ÓÍêºóµ±Ç°ÁÐ±í¶ÔÏóÖÐµÄÔªËØ¸öÊý£¬·µ»Ø -1 ±íÊ¾³ö´í»ò¸Ã key
-	 *  ¶ÔÏó·ÇÁÐ±í¶ÔÏó£¬µ±¸Ã key ²»´æÔÚÊ±»áÌí¼ÓÐÂµÄÁÐ±í¶ÔÏó¼°¶ÔÏóÖÐµÄÔªËØ
+	 * @return {int} ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç°ï¿½Ð±ï¿½ï¿½ï¿½ï¿½ï¿½Ðµï¿½Ôªï¿½Ø¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ -1 ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ key
+	 *  ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð±ï¿½ï¿½ï¿½ó£¬µï¿½ï¿½ï¿½ key ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Âµï¿½ï¿½Ð±ï¿½ï¿½ï¿½ó¼°¶ï¿½ï¿½ï¿½ï¿½Ðµï¿½Ôªï¿½ï¿½
 	 *  return the number of elements in list. -1 if error happened,
 	 *  or the object specified by key is not a list.
 	 */
@@ -212,70 +212,70 @@ public:
 		size_t argc);
 
 	/**
-	 * ½«Ò»¸öÐÂµÄÁÐ±í¶ÔÏóµÄÔªËØÌí¼ÓÖÁÒÑ¾­´æÔÚµÄÖ¸¶¨ÁÐ±í¶ÔÏóµÄÍ·²¿£¬µ±¸ÃÁÐ±í¶ÔÏó
-	 * ²»´æÔÚÊ±Ôò²»Ìí¼Ó
+	 * ï¿½ï¿½Ò»ï¿½ï¿½ï¿½Âµï¿½ï¿½Ð±ï¿½ï¿½ï¿½ï¿½ï¿½Ôªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ñ¾ï¿½ï¿½ï¿½ï¿½Úµï¿½Ö¸ï¿½ï¿½ï¿½Ð±ï¿½ï¿½ï¿½ï¿½ï¿½Í·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð±ï¿½ï¿½ï¿½ï¿½
+	 * ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½ï¿½
 	 * add a new element before the head of a list, only if the list exists
-	 * @param key {const char*} ÁÐ±í¶ÔÏóµÄ key
+	 * @param key {const char*} ï¿½Ð±ï¿½ï¿½ï¿½ï¿½ï¿½ key
 	 *  the list's key
-	 * @param value {const char*} ÐÂ¼ÓµÄÁÐ±í¶ÔÏóµÄÔªËØ
+	 * @param value {const char*} ï¿½Â¼Óµï¿½ï¿½Ð±ï¿½ï¿½ï¿½ï¿½ï¿½Ôªï¿½ï¿½
 	 *  the new element to be added
-	 * @return {int} ·µ»Øµ±Ç°ÁÐ±í¶ÔÏóµÄÔªËØ¸öÊý£¬º¬ÒåÈçÏÂ£º
+	 * @return {int} ï¿½ï¿½ï¿½Øµï¿½Ç°ï¿½Ð±ï¿½ï¿½ï¿½ï¿½ï¿½Ôªï¿½Ø¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â£ï¿½
 	 *  return the number of elements in the list:
-	 *  -1£º³ö´í£¬»ò¸Ã key ·ÇÁÐ±í¶ÔÏó
+	 *  -1ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ key ï¿½ï¿½ï¿½Ð±ï¿½ï¿½ï¿½ï¿½
 	 *      error or the key isn't refer to a list
-	 *   0£º¸Ã key ¶ÔÏó²»´æÔÚ
+	 *   0ï¿½ï¿½ï¿½ï¿½ key ï¿½ï¿½ï¿½ó²»´ï¿½ï¿½ï¿½
 	 *      the list specified by the given key doesn't exist
-	 *  >0£ºÌí¼ÓÍêºóµ±Ç°ÁÐ±í¶ÔÏóÖÐµÄÔªËØ¸öÊý
+	 *  >0ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç°ï¿½Ð±ï¿½ï¿½ï¿½ï¿½ï¿½Ðµï¿½Ôªï¿½Ø¸ï¿½ï¿½ï¿½
 	 *      the number of elements in list specifed by key after added
 	 */
 	int lpushx(const char* key, const char* value);
 	int lpushx(const char* key, const char* value, size_t len);
 
 	/**
-	 * ·µ»ØÁÐ±í key ÖÐÖ¸¶¨Çø¼äÄÚ£¨±ÕÇø¼ä£©µÄÔªËØ£¬Çø¼äÒÔÆ«ÒÆÁ¿ start ºÍ end Ö¸¶¨£»
-	 * ÏÂ±êÆðÊ¼Öµ´Ó 0 ¿ªÊ¼£¬-1 ±íÊ¾×îºóÒ»¸öÏÂ±êÖµ
+	 * ï¿½ï¿½ï¿½ï¿½ï¿½Ð±ï¿½ key ï¿½ï¿½Ö¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ú£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ä£©ï¿½ï¿½Ôªï¿½Ø£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ«ï¿½ï¿½ï¿½ï¿½ start ï¿½ï¿½ end Ö¸ï¿½ï¿½ï¿½ï¿½
+	 * ï¿½Â±ï¿½ï¿½ï¿½Ê¼Öµï¿½ï¿½ 0 ï¿½ï¿½Ê¼ï¿½ï¿½-1 ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½Â±ï¿½Öµ
 	 * get a range of elements from list, the range is specified by
 	 * start and end, and the start begins with 0, -1 means the end
-	 * @param key {const char*} ÁÐ±í¶ÔÏóµÄ key
+	 * @param key {const char*} ï¿½Ð±ï¿½ï¿½ï¿½ï¿½ï¿½ key
 	 *  the specified key of one list
-	 * @param start {int} ÆðÊ¼ÏÂ±êÖµ
+	 * @param start {int} ï¿½ï¿½Ê¼ï¿½Â±ï¿½Öµ
 	 *  the start subscript of list
-	 * @param end {int} ½áÊøÏÂ±êÖµ
+	 * @param end {int} ï¿½ï¿½ï¿½ï¿½ï¿½Â±ï¿½Öµ
 	 *  the end subscript of list
-	 * @param result {std::vector<string>*} ·Ç¿ÕÊ±´æ´¢ÁÐ±í¶ÔÏóÖÐÖ¸¶¨Çø¼äµÄÔªËØ¼¯ºÏ
+	 * @param result {std::vector<string>*} ï¿½Ç¿ï¿½Ê±ï¿½æ´¢ï¿½Ð±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ôªï¿½Ø¼ï¿½ï¿½ï¿½
 	 *  if not NULL, result will be used to store the results
-	 * @return {bool} ²Ù×÷ÊÇ·ñ³É¹¦£¬µ±·µ»Ø false ±íÊ¾³ö´í»ò key ·ÇÁÐ±í¶ÔÏó
+	 * @return {bool} ï¿½ï¿½ï¿½ï¿½ï¿½Ç·ï¿½É¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ false ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½ï¿½ï¿½ key ï¿½ï¿½ï¿½Ð±ï¿½ï¿½ï¿½ï¿½
 	 *  if success for this operation, false if the key is not a list or
 	 *  error happened
-	 *  ¾ÙÀý£º
+	 *  ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	 *  for example:
-	 *  1) µ± start = 0, end = 10 Ê±ÔòÖ¸¶¨´ÓÏÂ±ê 0 ¿ªÊ¼ÖÁ 10 µÄ 11 ¸öÔªËØ
+	 *  1) ï¿½ï¿½ start = 0, end = 10 Ê±ï¿½ï¿½Ö¸ï¿½ï¿½ï¿½ï¿½ï¿½Â±ï¿½ 0 ï¿½ï¿½Ê¼ï¿½ï¿½ 10 ï¿½ï¿½ 11 ï¿½ï¿½Ôªï¿½ï¿½
 	 *     if start is 0 and end is 10, then the subscript range is
 	 *     between 0 and 10(include 10).
-	 *  2) µ± start = -1, end = -2 Ê±ÔòÖ¸¶¨´Ó×îºóÒ»¸öÔªËØµÚµ¹ÊýµÚ¶þ¸ö¹² 2 ¸öÔªËØ 
+	 *  2) ï¿½ï¿½ start = -1, end = -2 Ê±ï¿½ï¿½Ö¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½Ôªï¿½ØµÚµï¿½ï¿½ï¿½ï¿½Ú¶ï¿½ï¿½ï¿½ï¿½ï¿½ 2 ï¿½ï¿½Ôªï¿½ï¿½ 
 	 *     if start is -1 and end is -2, the range is from the end and
 	 *     backward the second element.
 	 *
-	 *  ²Ù×÷³É¹¦ºó¿ÉÒÔÍ¨¹ýÒÔÏÂÈÎÒ»·½Ê½»ñµÃÊý¾Ý
+	 *  ï¿½ï¿½ï¿½ï¿½ï¿½É¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í¨ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½Ê½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	 *  the result can be got by one of the ways as below:
 	 *
-	 *  1¡¢ÔÚµ÷ÓÃ·½·¨ÖÐ´«Èë·Ç¿ÕµÄ´æ´¢½á¹û¶ÔÏóµÄµØÖ·
+	 *  1ï¿½ï¿½ï¿½Úµï¿½ï¿½Ã·ï¿½ï¿½ï¿½ï¿½Ð´ï¿½ï¿½ï¿½Ç¿ÕµÄ´æ´¢ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Äµï¿½Ö·
 	 *     the most easily way is to set a non-NULL result parameter
 	 *     for this function
-	 *  2¡¢»ùÀà·½·¨ get_value »ñµÃÖ¸¶¨ÏÂ±êµÄÔªËØÊý¾Ý
+	 *  2ï¿½ï¿½ï¿½ï¿½ï¿½à·½ï¿½ï¿½ get_value ï¿½ï¿½ï¿½Ö¸ï¿½ï¿½ï¿½Â±ï¿½ï¿½Ôªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	 *     get the specified subscript's element by redis_command::get_value 
-	 *  3¡¢»ùÀà·½·¨ get_child »ñµÃÖ¸¶¨ÏÂ±êµÄÔªËØ¶ÔÏó(redis_result£©£¬È»ºóÔÙÍ¨¹ý
-	 *     redis_result::argv_to_string ·½·¨»ñµÃÔªËØÊý¾Ý
+	 *  3ï¿½ï¿½ï¿½ï¿½ï¿½à·½ï¿½ï¿½ get_child ï¿½ï¿½ï¿½Ö¸ï¿½ï¿½ï¿½Â±ï¿½ï¿½Ôªï¿½Ø¶ï¿½ï¿½ï¿½(redis_resultï¿½ï¿½ï¿½ï¿½È»ï¿½ï¿½ï¿½ï¿½Í¨ï¿½ï¿½
+	 *     redis_result::argv_to_string ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ôªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	 *     get redis_result object with the given subscript, and get the
 	 *     element by redis_result::argv_to_string
-	 *  4¡¢»ùÀà·½·¨ get_result ·½·¨È¡µÃ×Ü½á¹û¼¯¶ÔÏó redis_result£¬È»ºóÔÙÍ¨¹ý
-	 *     redis_result::get_child »ñµÃÒ»¸öÔªËØ¶ÔÏó£¬È»ºóÔÙÍ¨¹ý·½Ê½ 2 ÖÐÖ¸¶¨
-	 *     µÄ·½·¨»ñµÃ¸ÃÔªËØµÄÊý¾Ý
+	 *  4ï¿½ï¿½ï¿½ï¿½ï¿½à·½ï¿½ï¿½ get_result ï¿½ï¿½ï¿½ï¿½È¡ï¿½ï¿½ï¿½Ü½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ redis_resultï¿½ï¿½È»ï¿½ï¿½ï¿½ï¿½Í¨ï¿½ï¿½
+	 *     redis_result::get_child ï¿½ï¿½ï¿½Ò»ï¿½ï¿½Ôªï¿½Ø¶ï¿½ï¿½ï¿½È»ï¿½ï¿½ï¿½ï¿½Í¨ï¿½ï¿½ï¿½ï¿½Ê½ 2 ï¿½ï¿½Ö¸ï¿½ï¿½
+	 *     ï¿½Ä·ï¿½ï¿½ï¿½ï¿½ï¿½Ã¸ï¿½Ôªï¿½Øµï¿½ï¿½ï¿½ï¿½ï¿½
 	 *     get redis_result object by redis_command::get_result, and get
 	 *     the first element by redis_result::get_child, then get the
 	 *     element by the way same as the way 2 above.
-	 *  5¡¢»ùÀà·½·¨ get_children »ñµÃ½á¹ûÔªËØÊý×é¶ÔÏó£¬ÔÙÍ¨¹ý redis_result ÖÐ
-	 *     µÄ·½·¨ argv_to_string ´ÓÃ¿Ò»¸öÔªËØ¶ÔÏóÖÐ»ñµÃÔªËØÊý¾Ý
+	 *  5ï¿½ï¿½ï¿½ï¿½ï¿½à·½ï¿½ï¿½ get_children ï¿½ï¿½Ã½ï¿½ï¿½Ôªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í¨ï¿½ï¿½ redis_result ï¿½ï¿½
+	 *     ï¿½Ä·ï¿½ï¿½ï¿½ argv_to_string ï¿½ï¿½Ã¿Ò»ï¿½ï¿½Ôªï¿½Ø¶ï¿½ï¿½ï¿½ï¿½Ð»ï¿½ï¿½Ôªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	 *     get child array by redis_command::get_children, and get the
 	 *     element from one of redis_result array by argv_to_string.
 	 */
@@ -283,47 +283,47 @@ public:
 		std::vector<string>* result);
 
 	/**
-	 * ¸ù¾ÝÔªËØÖµ´ÓÁÐ±í¶ÔÏóÖÐÒÆ³ýÖ¸¶¨ÊýÁ¿µÄÔªËØ
+	 * ï¿½ï¿½ï¿½ï¿½Ôªï¿½ï¿½Öµï¿½ï¿½ï¿½Ð±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ³ï¿½Ö¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ôªï¿½ï¿½
 	 * remove the first count occurrences of elements equal to value
 	 * from the list stored at key
-	 * @param key {const char*} ÁÐ±í¶ÔÏóµÄ key
+	 * @param key {const char*} ï¿½Ð±ï¿½ï¿½ï¿½ï¿½ï¿½ key
 	 *  the key of a list
-	 * @param count {int} ÒÆ³ýÔªËØµÄÊýÁ¿ÏÞÖÆ£¬count µÄº¬ÒåÈçÏÂ£º
+	 * @param count {int} ï¿½Æ³ï¿½Ôªï¿½Øµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ£ï¿½count ï¿½Äºï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â£ï¿½
 	 *  the first count of elements to be removed, as below:
-	 *  count > 0 : ´Ó±íÍ·¿ªÊ¼Ïò±íÎ²ËÑË÷£¬ÒÆ³ýÓë value ÏàµÈµÄÔªËØ£¬ÊýÁ¿Îª count
+	 *  count > 0 : ï¿½Ó±ï¿½Í·ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½Î²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ³ï¿½ï¿½ï¿½ value ï¿½ï¿½Èµï¿½Ôªï¿½Ø£ï¿½ï¿½ï¿½ï¿½ï¿½Îª count
 	 *              remove elements equal to value moving from head to tail
-	 *  count < 0 : ´Ó±íÎ²¿ªÊ¼Ïò±íÍ·ËÑË÷£¬ÒÆ³ýÓë value ÏàµÈµÄÔªËØ£¬ÊýÁ¿Îª count µÄ¾ø¶ÔÖµ
+	 *  count < 0 : ï¿½Ó±ï¿½Î²ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½Í·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ³ï¿½ï¿½ï¿½ value ï¿½ï¿½Èµï¿½Ôªï¿½Ø£ï¿½ï¿½ï¿½ï¿½ï¿½Îª count ï¿½Ä¾ï¿½ï¿½ï¿½Öµ
 	 *              remove elements equal to value moving from tail to head
-	 *  count = 0 : ÒÆ³ý±íÖÐËùÓÐÓë value ÏàµÈµÄÖµ
+	 *  count = 0 : ï¿½Æ³ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ value ï¿½ï¿½Èµï¿½Öµ
 	 *              remove all elements equal to value
-	 * @param value {const char*} Ö¸¶¨µÄÔªËØÖµ£¬ÐèÒª´ÓÁÐ±í¶ÔÏóÖÐ±éÀúËùÓÐÓë¸ÃÖµ±È½Ï
+	 * @param value {const char*} Ö¸ï¿½ï¿½ï¿½ï¿½Ôªï¿½ï¿½Öµï¿½ï¿½ï¿½ï¿½Òªï¿½ï¿½ï¿½Ð±ï¿½ï¿½ï¿½ï¿½ï¿½Ð±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Öµï¿½È½ï¿½
 	 *  the specified value for removing elements
-	 * @return {int} ±»ÒÆ³ýµÄ¶ÔÏóÊýÁ¿£¬·µ»ØÖµº¬ÒåÈçÏÂ£º
+	 * @return {int} ï¿½ï¿½ï¿½Æ³ï¿½ï¿½Ä¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Öµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â£ï¿½
 	 *  the count of elements removed, meaning show below:
-	 *  -1£º³ö´í»ò¸Ã key ¶ÔÏó·ÇÁÐ±í¶ÔÏó
+	 *  -1ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ key ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð±ï¿½ï¿½ï¿½ï¿½
 	 *      error happened or the key is not refer to a list
-	 *   0£ºkey ²»´æÔÚ»òÒÆ³ýµÄÔªËØ¸öÊýÎª 0
+	 *   0ï¿½ï¿½key ï¿½ï¿½ï¿½ï¿½ï¿½Ú»ï¿½ï¿½Æ³ï¿½ï¿½ï¿½Ôªï¿½Ø¸ï¿½ï¿½ï¿½Îª 0
 	 *      the key does not exist or the count of elements removed is 0
-	 *  >0£º±»³É¹¦ÒÆ³ýµÄÔªËØÊýÁ¿
+	 *  >0ï¿½ï¿½ï¿½ï¿½ï¿½É¹ï¿½ï¿½Æ³ï¿½ï¿½ï¿½Ôªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	 *      the count of elements removed successfully
 	 */
 	int lrem(const char* key, int count, const char* value);
 	int lrem(const char* key, int count, const char* value, size_t len);
 
 	/**
-	 * ½«ÁÐ±í key ÏÂ±êÎª idx µÄÔªËØµÄÖµÉèÖÃÎª value£¬µ± idx ²ÎÊý³¬³ö·¶Î§£¬»ò¶Ô
-	 * Ò»¸ö¿ÕÁÐ±í( key ²»´æÔÚ)½øÐÐ lset Ê±£¬·µ»ØÒ»¸ö´íÎó
+	 * ï¿½ï¿½ï¿½Ð±ï¿½ key ï¿½Â±ï¿½Îª idx ï¿½ï¿½Ôªï¿½Øµï¿½Öµï¿½ï¿½ï¿½ï¿½Îª valueï¿½ï¿½ï¿½ï¿½ idx ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Î§ï¿½ï¿½ï¿½ï¿½ï¿½
+	 * Ò»ï¿½ï¿½ï¿½ï¿½ï¿½Ð±ï¿½( key ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½)ï¿½ï¿½ï¿½ï¿½ lset Ê±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	 * set the value of a element in a list by its index, if the index
 	 * out of bounds or the key of list not exist, an error will happen.
-	 * @param key {const char*} ÁÐ±í¶ÔÏóµÄ key
+	 * @param key {const char*} ï¿½Ð±ï¿½ï¿½ï¿½ï¿½ï¿½ key
 	 *  the key of list
-	 * @param idx {int} ÏÂ±êÎ»ÖÃ£¬µ±Îª¸ºÖµÊ±Ôò´ÓÎ²²¿ÏòÍ·Î²²¿¶¨Î»£¬·ñÔò²ÉÓÃË³Ðò·½Ê½£»
-	 *  Èç£º0 ±íÊ¾Í·²¿µÚÒ»¸öÔªËØ£¬-1 ±íÊ¾Î²²¿¿ªÊ¼µÄµÚÒ»¸öÔªËØ
+	 * @param idx {int} ï¿½Â±ï¿½Î»ï¿½Ã£ï¿½ï¿½ï¿½Îªï¿½ï¿½ÖµÊ±ï¿½ï¿½ï¿½Î²ï¿½ï¿½ï¿½ï¿½Í·Î²ï¿½ï¿½ï¿½ï¿½Î»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ë³ï¿½ï¿½Ê½ï¿½ï¿½
+	 *  ï¿½ç£º0 ï¿½ï¿½Ê¾Í·ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½Ôªï¿½Ø£ï¿½-1 ï¿½ï¿½Ê¾Î²ï¿½ï¿½ï¿½ï¿½Ê¼ï¿½Äµï¿½Ò»ï¿½ï¿½Ôªï¿½ï¿½
 	 *  the index in the list, if it's negative, iterating data will be
 	 *  from tail to head, or be from head to tail.
-	 * @param value {const char*} ÔªËØÐÂÖµ
+	 * @param value {const char*} Ôªï¿½ï¿½ï¿½ï¿½Öµ
 	 *  the new value of the element by its index
-	 * @return {bool} µ± key ·ÇÁÐ±í¶ÔÏó»ò key ²»´æÔÚ»ò idx ³¬³ö·¶Î§Ôò·µ»Ø false
+	 * @return {bool} ï¿½ï¿½ key ï¿½ï¿½ï¿½Ð±ï¿½ï¿½ï¿½ï¿½ï¿½ key ï¿½ï¿½ï¿½ï¿½ï¿½Ú»ï¿½ idx ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Î§ï¿½ò·µ»ï¿½ false
 	 *  if success. false if the object of the key isn't list, or key's
 	 *  list not exist, or the index out of bounds.
 	 */
@@ -331,32 +331,32 @@ public:
 	bool lset(const char* key, int idx, const char* value, size_t len);
 
 	/**
-	 * ¶ÔÖ¸¶¨µÄÁÐ±í¶ÔÏó£¬¶ÔÒ»¸öÁÐ±í½øÐÐÐÞ¼ô£¬ÈÃÁÐ±íÖ»±£ÁôÖ¸¶¨Çø¼äÄÚµÄÔªËØ£¬
-	 * ²»ÔÚÖ¸¶¨Çø¼äÖ®ÄÚµÄÔªËØ¶¼½«±»É¾³ý£»Çø¼äÒÔÆ«ÒÆÁ¿ start ºÍ end Ö¸¶¨£»
-	 * ÏÂ±êÆðÊ¼Öµ´Ó 0 ¿ªÊ¼£¬-1 ±íÊ¾×îºóÒ»¸öÏÂ±êÖµ
+	 * ï¿½ï¿½Ö¸ï¿½ï¿½ï¿½ï¿½ï¿½Ð±ï¿½ï¿½ï¿½ó£¬¶ï¿½Ò»ï¿½ï¿½ï¿½Ð±ï¿½ï¿½ï¿½ï¿½ï¿½Þ¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð±ï¿½Ö»ï¿½ï¿½ï¿½ï¿½Ö¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Úµï¿½Ôªï¿½Ø£ï¿½
+	 * ï¿½ï¿½ï¿½ï¿½Ö¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö®ï¿½Úµï¿½Ôªï¿½Ø¶ï¿½ï¿½ï¿½ï¿½ï¿½É¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ«ï¿½ï¿½ï¿½ï¿½ start ï¿½ï¿½ end Ö¸ï¿½ï¿½ï¿½ï¿½
+	 * ï¿½Â±ï¿½ï¿½ï¿½Ê¼Öµï¿½ï¿½ 0 ï¿½ï¿½Ê¼ï¿½ï¿½-1 ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½Â±ï¿½Öµ
 	 * remove elements in a list by range betwwen start and end.
-	 * @param key {const char*} ÁÐ±í¶ÔÏóµÄ key
+	 * @param key {const char*} ï¿½Ð±ï¿½ï¿½ï¿½ï¿½ï¿½ key
 	 *  the key of a list
-	 * @param start {int} ÆðÊ¼ÏÂ±êÖµ
+	 * @param start {int} ï¿½ï¿½Ê¼ï¿½Â±ï¿½Öµ
 	 *  the start index in a list
-	 * @param end {int} ½áÊøÏÂ±êÖµ
+	 * @param end {int} ï¿½ï¿½ï¿½ï¿½ï¿½Â±ï¿½Öµ
 	 *  the end index in a list
-	 * @return {bool} ²Ù×÷ÊÇ·ñ³É¹¦£¬µ±·µ»Ø false Ê±±íÊ¾³ö´í»òÖ¸¶¨µÄ key ¶ÔÏó·Ç
-	 *  ÁÐ±í¶ÔÏó£»µ±³É¹¦É¾³ý»ò key ¶ÔÏó²»´æÔÚÊ±Ôò·µ»Ø true
+	 * @return {bool} ï¿½ï¿½ï¿½ï¿½ï¿½Ç·ï¿½É¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ false Ê±ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½ï¿½ï¿½Ö¸ï¿½ï¿½ï¿½ï¿½ key ï¿½ï¿½ï¿½ï¿½ï¿½
+	 *  ï¿½Ð±ï¿½ï¿½ï¿½ó£»µï¿½ï¿½É¹ï¿½É¾ï¿½ï¿½ï¿½ï¿½ key ï¿½ï¿½ï¿½ó²»´ï¿½ï¿½ï¿½Ê±ï¿½ò·µ»ï¿½ true
 	 *  if success. false if error happened, or the key's object is not
 	 *  a list, or the key's object not exist.
 	 */
 	bool ltrim(const char* key, int start, int end);
 
 	/**
-	 * ´ÓÁÐ±í¶ÔÏóÖÐÒÆ³ý²¢·µ»ØÎ²²¿ÔªËØ
+	 * ï¿½ï¿½ï¿½Ð±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ³ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Î²ï¿½ï¿½Ôªï¿½ï¿½
 	 * remove and get the last element of a list
-	 * @param key {const char*} ÔªËØ¶ÔÏóµÄ key
+	 * @param key {const char*} Ôªï¿½Ø¶ï¿½ï¿½ï¿½ï¿½ key
 	 *  the key of the list
-	 * @param buf {string&} ´æ´¢µ¯³öµÄÔªËØÖµ
+	 * @param buf {string&} ï¿½æ´¢ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ôªï¿½ï¿½Öµ
 	 *  store the element pop from list
-	 * @return {int} ·µ»ØÖµº¬Òå£º1 -- ±íÊ¾³É¹¦µ¯³öÒ»¸öÔªËØ£¬-1 -- ±íÊ¾³ö´í£¬»ò¸Ã
-	 *  ¶ÔÏó·ÇÁÐ±í¶ÔÏó£¬»ò¸Ã¶ÔÏóÒÑ¾­Îª¿Õ
+	 * @return {int} ï¿½ï¿½ï¿½ï¿½Öµï¿½ï¿½ï¿½å£º1 -- ï¿½ï¿½Ê¾ï¿½É¹ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½Ôªï¿½Ø£ï¿½-1 -- ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	 *  ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð±ï¿½ï¿½ï¿½ó£¬»ï¿½Ã¶ï¿½ï¿½ï¿½ï¿½Ñ¾ï¿½Îªï¿½ï¿½
 	 *  return as below:
 	 *   1: get a element successfully
 	 *  -1: error happened, or not a list, or the list is empty.
@@ -364,35 +364,35 @@ public:
 	int rpop(const char* key, string& buf);
 
 	/**
-	 * ÔÚÒ»¸öÔ­×ÓÊ±¼äÄÚ£¬·Ç×èÈû·½Ê½Ö´ÐÐÒÔÏÂÁ½¸ö¶¯×÷£º
-	 * ½«ÁÐ±í src ÖÐµÄ×îºóÒ»¸öÔªËØ(Î²ÔªËØ)µ¯³ö£¬²¢·µ»Ø¸ø¿Í»§¶Ë¡£
-	 * ½« src µ¯³öµÄÔªËØ²åÈëµ½ÁÐ±í dst £¬×÷Îª dst ÁÐ±íµÄµÄÍ·ÔªËØ
+	 * ï¿½ï¿½Ò»ï¿½ï¿½Ô­ï¿½ï¿½Ê±ï¿½ï¿½ï¿½Ú£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê½Ö´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	 * ï¿½ï¿½ï¿½Ð±ï¿½ src ï¿½Ðµï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½Ôªï¿½ï¿½(Î²Ôªï¿½ï¿½)ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ø¸ï¿½ï¿½Í»ï¿½ï¿½Ë¡ï¿½
+	 * ï¿½ï¿½ src ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ôªï¿½Ø²ï¿½ï¿½ëµ½ï¿½Ð±ï¿½ dst ï¿½ï¿½ï¿½ï¿½Îª dst ï¿½Ð±ï¿½Äµï¿½Í·Ôªï¿½ï¿½
 	 * remove the last element in a list, prepend it to another list
 	 * and return it.
-	 * @param src {const char*} Ô´ÁÐ±í¶ÔÏó key
+	 * @param src {const char*} Ô´ï¿½Ð±ï¿½ï¿½ï¿½ï¿½ key
 	 *  the key of the source list
-	 * @param dst {const char*} Ä¿±êÁÐ±í¶ÔÏó key
+	 * @param dst {const char*} Ä¿ï¿½ï¿½ï¿½Ð±ï¿½ï¿½ï¿½ï¿½ key
 	 *  the key of the destination list
-	 * @param buf {string*} ·Ç¿ÕÊ±´æ´¢ src µÄÎ²²¿ÔªËØ key Öµ
+	 * @param buf {string*} ï¿½Ç¿ï¿½Ê±ï¿½æ´¢ src ï¿½ï¿½Î²ï¿½ï¿½Ôªï¿½ï¿½ key Öµ
 	 *  if not NULL, it will store the element
-	 * @return {bool} µ±´Ó src ÁÐ±íÖÐ³É¹¦µ¯³öÎ²²¿ÔªËØ²¢·ÅÈë dst ÁÐ±íÍ·²¿ºó
-	 *  ¸Ã·½·¨·µ»Ø true£»·µ»Ø false ³ö´í»ò src/dst ÓÐÒ»¸ö·ÇÁÐ±í¶ÔÏó
+	 * @return {bool} ï¿½ï¿½ï¿½ï¿½ src ï¿½Ð±ï¿½ï¿½Ð³É¹ï¿½ï¿½ï¿½ï¿½ï¿½Î²ï¿½ï¿½Ôªï¿½Ø²ï¿½ï¿½ï¿½ï¿½ï¿½ dst ï¿½Ð±ï¿½Í·ï¿½ï¿½ï¿½ï¿½
+	 *  ï¿½Ã·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ trueï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ false ï¿½ï¿½ï¿½ï¿½ï¿½ src/dst ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½Ð±ï¿½ï¿½ï¿½ï¿½
 	 *  true if the element was removed from a list to another list,
 	 *  false if error happened, one of src or dst is not a list.
 	 */
 	bool rpoplpush(const char* src, const char* dst, string* buf = NULL);
 
 	/**
-	 * ½«Ò»¸ö»ò¶à¸öÖµÔªËØ²åÈëµ½ÁÐ±í¶ÔÏó key µÄ±íÎ²
+	 * ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÖµÔªï¿½Ø²ï¿½ï¿½ëµ½ï¿½Ð±ï¿½ï¿½ï¿½ï¿½ key ï¿½Ä±ï¿½Î²
 	 * append one or multiple values to a list
-	 * @param key {const char*} ÁÐ±í¶ÔÏóµÄ key
+	 * @param key {const char*} ï¿½Ð±ï¿½ï¿½ï¿½ï¿½ï¿½ key
 	 *  the key of a list
-	 * @param first_value {const char*} µÚÒ»¸ö·Ç¿Õ×Ö·û´®£¬¸Ã±ä²ÎµÄÁÐ±íµÄ×îºóÒ»¸ö
-	 *  ±ØÐëÉèÎª NULL
+	 * @param first_value {const char*} ï¿½ï¿½Ò»ï¿½ï¿½ï¿½Ç¿ï¿½ï¿½Ö·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ã±ï¿½Îµï¿½ï¿½Ð±ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½
+	 *  ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Îª NULL
 	 *  the first element of a variable args must be not NULL, and the
 	 *  last arg must be NULL indicating the end of the args.
-	 * @return {int} ·µ»ØÌí¼ÓÍêºóµ±Ç°ÁÐ±í¶ÔÏóÖÐµÄÔªËØ¸öÊý£¬·µ»Ø -1 ±íÊ¾³ö´í»ò¸Ã key
-	 *  ¶ÔÏó·ÇÁÐ±í¶ÔÏó£¬µ±¸Ã key ²»´æÔÚÊ±»áÌí¼ÓÐÂµÄÁÐ±í¶ÔÏó¼°¶ÔÏóÖÐµÄÔªËØ
+	 * @return {int} ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç°ï¿½Ð±ï¿½ï¿½ï¿½ï¿½ï¿½Ðµï¿½Ôªï¿½Ø¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ -1 ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ key
+	 *  ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð±ï¿½ï¿½ï¿½ó£¬µï¿½ï¿½ï¿½ key ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Âµï¿½ï¿½Ð±ï¿½ï¿½ï¿½ó¼°¶ï¿½ï¿½ï¿½ï¿½Ðµï¿½Ôªï¿½ï¿½
 	 *  return the number of a list specified by a key. -1 if error
 	 *  happened, or the key's object isn't a list, if the list by the
 	 *  key doese not exist, a new list will be created with the key.
@@ -405,20 +405,20 @@ public:
 		size_t argc);
 
 	/**
-	 * ½«Ò»¸öÐÂµÄÁÐ±í¶ÔÏóµÄÔªËØÌí¼ÓÖÁÒÑ¾­´æÔÚµÄÖ¸¶¨ÁÐ±í¶ÔÏóµÄÎ²²¿£¬µ±¸ÃÁÐ±í¶ÔÏó
-	 * ²»´æÔÚÊ±Ôò²»Ìí¼Ó
+	 * ï¿½ï¿½Ò»ï¿½ï¿½ï¿½Âµï¿½ï¿½Ð±ï¿½ï¿½ï¿½ï¿½ï¿½Ôªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ñ¾ï¿½ï¿½ï¿½ï¿½Úµï¿½Ö¸ï¿½ï¿½ï¿½Ð±ï¿½ï¿½ï¿½ï¿½ï¿½Î²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð±ï¿½ï¿½ï¿½ï¿½
+	 * ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½ï¿½
 	 * append one or multiple values to a list only if the list exists.
-	 * @param key {const char*} ÁÐ±í¶ÔÏóµÄ key
+	 * @param key {const char*} ï¿½Ð±ï¿½ï¿½ï¿½ï¿½ï¿½ key
 	 *  the key of a list
-	 * @param value {const char*} ÐÂ¼ÓµÄÁÐ±í¶ÔÏóµÄÔªËØ
+	 * @param value {const char*} ï¿½Â¼Óµï¿½ï¿½Ð±ï¿½ï¿½ï¿½ï¿½ï¿½Ôªï¿½ï¿½
 	 *  the new element to be added.
-	 * @return {int} ·µ»Øµ±Ç°ÁÐ±í¶ÔÏóµÄÔªËØ¸öÊý£¬º¬ÒåÈçÏÂ£º
+	 * @return {int} ï¿½ï¿½ï¿½Øµï¿½Ç°ï¿½Ð±ï¿½ï¿½ï¿½ï¿½ï¿½Ôªï¿½Ø¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â£ï¿½
 	 *  return the number of the list, as below:
-	 *  -1£º³ö´í£¬»ò¸Ã key ·ÇÁÐ±í¶ÔÏó
+	 *  -1ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ key ï¿½ï¿½ï¿½Ð±ï¿½ï¿½ï¿½ï¿½
 	 *      error happened, or the key's object isn't a list
-	 *   0£º¸Ã key ¶ÔÏó²»´æÔÚ
+	 *   0ï¿½ï¿½ï¿½ï¿½ key ï¿½ï¿½ï¿½ó²»´ï¿½ï¿½ï¿½
 	 *      the key's object doesn't exist
-	 *  >0£ºÌí¼ÓÍêºóµ±Ç°ÁÐ±í¶ÔÏóÖÐµÄÔªËØ¸öÊý
+	 *  >0ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç°ï¿½Ð±ï¿½ï¿½ï¿½ï¿½ï¿½Ðµï¿½Ôªï¿½Ø¸ï¿½ï¿½ï¿½
 	 *     the number of elements in the list after adding.
 	 */
 	int rpushx(const char* key, const char* value);
