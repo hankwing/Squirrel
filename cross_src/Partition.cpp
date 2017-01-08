@@ -88,9 +88,9 @@ void Partition::partitonStarField(StarFile *starFile) {
  * @return the matched star is stored on objStar->match, 
  *         the distance between two stars is stored on objStar->error
  */
-std::pair<int, std::string> Partition::getMatchStar(CMStar *objStar) {
+std::pair<int, acl::string> Partition::getMatchStar(CMStar *objStar) {
 
-	std::pair<int, std::string> matchedInfo(-1, "");
+	std::pair<int, acl::string> matchedInfo(-1, "");
 	long sZoneNum = 0;
 	long *searchZonesIdx = getStarSearchZone(objStar, sZoneNum);
 
@@ -111,10 +111,10 @@ std::pair<int, std::string> Partition::getMatchStar(CMStar *objStar) {
 		objStar->match = minPoint;
 		objStar->error = minError;
 
-		char string[500];
+		acl::string info;
 
-		objStar->toString(minPoint->redis_key, string);
-		matchedInfo.second = string;
+		objStar->toString(minPoint, info);
+		matchedInfo.second = info;
 		//objStar->starFile->redisStrings.push_back(string);
 
 	} else {

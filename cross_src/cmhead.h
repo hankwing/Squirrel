@@ -11,6 +11,7 @@
 #include "acl_cpp/lib_acl.hpp"
 #include "StarFile.h"
 #include <sstream>
+#include <bitset>
 
 #define CHECK_IS_NULL(var,varname) \
         {if(var==NULL){\
@@ -86,7 +87,7 @@ public:
     StarFile *starFile = NULL;
     char redis_key[20];
 
-    void toString( char * redisKey, char* starInfo) {
+    void toString( CMStar* refStar, acl::string& starInfo) {
     	//std::ostringstream ostr;
     	/*ostr << redisKey << ":" << starId << " " << id << " " << crossid << " " << alpha << " "
     			<< delta << " " << catid << " " << background << " " << classstar << " " <<
@@ -101,7 +102,11 @@ public:
     					ellipticity, flags, mag, mage, magnorm, fwhm, magcalib, magcalibe, pixx,
     					pixy, pixx1, pixy1, thetaimage, vignet, error, inarea, fluxRatio,
     					matchNum, gridIdx, fluxVarTag);*/
-    	sprintf(starInfo, "%s %s", redisKey, raw_info);
+    	//sprintf(starInfo, "%s %s", redisKey, raw_info);
+
+    	starInfo.append(refStar->redis_key);
+    	starInfo.append(" ");
+    	starInfo.append(raw_info);
     }
 
     ~CMStar() {

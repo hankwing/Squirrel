@@ -1,5 +1,4 @@
 cross_src/StarFile.o: ../cross_src/StarFile.cpp ../cross_src/StarFile.h \
- ../cross_src/cmhead.h \
  /home/wamdm/workspace/Squirrel/library/acl/lib_acl_cpp/include/acl_cpp/lib_acl.hpp \
  /home/wamdm/workspace/Squirrel/library/acl/lib_acl_cpp/include/acl_cpp/acl_cpp_define.hpp \
  /home/wamdm/workspace/Squirrel/library/acl/lib_acl_cpp/include/acl_cpp/acl_cpp_init.hpp \
@@ -160,11 +159,10 @@ cross_src/StarFile.o: ../cross_src/StarFile.cpp ../cross_src/StarFile.h \
  /home/wamdm/workspace/Squirrel/library/acl/lib_acl_cpp/include/acl_cpp/disque/disque.hpp \
  /home/wamdm/workspace/Squirrel/library/acl/lib_acl_cpp/include/acl_cpp/disque/disque_cond.hpp \
  /home/wamdm/workspace/Squirrel/library/acl/lib_acl_cpp/include/acl_cpp/disque/disque_job.hpp \
- /home/wamdm/workspace/Squirrel/library/acl/lib_acl_cpp/include/acl_cpp/disque/disque_node.hpp
+ /home/wamdm/workspace/Squirrel/library/acl/lib_acl_cpp/include/acl_cpp/disque/disque_node.hpp \
+ ../cross_src/cmhead.h
 
 ../cross_src/StarFile.h:
-
-../cross_src/cmhead.h:
 
 /home/wamdm/workspace/Squirrel/library/acl/lib_acl_cpp/include/acl_cpp/lib_acl.hpp:
 
@@ -487,3 +485,5 @@ cross_src/StarFile.o: ../cross_src/StarFile.cpp ../cross_src/StarFile.h \
 /home/wamdm/workspace/Squirrel/library/acl/lib_acl_cpp/include/acl_cpp/disque/disque_job.hpp:
 
 /home/wamdm/workspace/Squirrel/library/acl/lib_acl_cpp/include/acl_cpp/disque/disque_node.hpp:
+
+../cross_src/cmhead.h:

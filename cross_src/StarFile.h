@@ -10,6 +10,8 @@
 
 #include <string>
 #include <vector>
+#include "acl_cpp/lib_acl.hpp"
+#include <unordered_map>
 
 class CMStar;
 
@@ -21,7 +23,8 @@ public:
     int matchedCount;
     int OTStarCount;
     int abStar;
-    std::vector<std::vector<std::string> > starDataCache;
+    std::vector<std::vector<acl::string> > starDataCache;
+    std::unordered_map<std::string, std::vector<float> > templateValues;
     //std::vector<std::string> redisStrings;
 
 public:

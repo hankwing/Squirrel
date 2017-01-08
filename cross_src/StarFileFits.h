@@ -10,6 +10,8 @@
 
 #include "StarFile.h"
 #include <vector>
+#include <unordered_map>
+#include <bitset>
 #include <string>
 #include "acl_cpp/lib_acl.hpp"
 
@@ -68,6 +70,7 @@ public:
   //alluxio::jAlluxioFileSystem alluxioClient;
   acl::redis_client_cluster *conn = NULL;
   const char* redisHost = NULL;
+  //std::unordered_map<const char*, int> bitMap;
   // save temp star data
 
   StarFileFits();

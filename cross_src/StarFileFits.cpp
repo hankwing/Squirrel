@@ -374,15 +374,18 @@ void StarFileFits::readStar(const char * fileName, bool isRef) {
 	char *string_ptr=NULL;
 	char * p;
 	int i = 0, j = 0;
+	float value = 0.0;
 
 	while (!starFile.eof()) {
 
 		starFile.getline(line, 500);
+
 		if( starFile.fail()) {
 			break;
 		}
 
-		CMStar *tStar = (CMStar *) malloc(sizeof(CMStar));
+		CMStar *tStar = new CMStar();
+		std::vector<float> rowValues;
 		if (i == 0) {
 			starList = tStar;
 		} else {
@@ -404,80 +407,82 @@ void StarFileFits::readStar(const char * fileName, bool isRef) {
 
 			switch( j ) {
 			case 0:
-				tStar->ccdNum = atoi(p);
+				value = tStar->ccdNum = atoi(p);
 				break;
 			case 1:
-				tStar->thetaimage = atoi(p);
+				value = tStar->thetaimage = atoi(p);
 				break;
 			case 2:
-				tStar->zone = atoi(p);
+				value = tStar->zone = atoi(p);
 				break;
 			case 3:
-				tStar->alpha = atof(p);
+				value = tStar->alpha = atof(p);
 				break;
 			case 4:
-				tStar->delta = atof(p);
+				value = tStar->delta = atof(p);
 				break;
 			case 5:
-				tStar->mag = atof(p);
+				value = tStar->mag = atof(p);
 				break;
 			case 6:
-				tStar->pixx = tStar->pixx1 = atof(p);
+				value = tStar->pixx = tStar->pixx1 = atof(p);
 				break;
 			case 7:
-				tStar->pixy = tStar->pixy1 = atof(p);
+				value = tStar->pixy = tStar->pixy1 = atof(p);
 				break;
 			case 8:
-				tStar->ra_err = atof(p);
+				value = tStar->ra_err = atof(p);
 				break;
 			case 9:
-				tStar->dec_err = atof(p);
+				value = tStar->dec_err = atof(p);
 				break;
 			case 10:
-				tStar->x = atof(p);
+				value = tStar->x = atof(p);
 				break;
 			case 11:
-				tStar->y = atof(p);
+				value = tStar->y = atof(p);
 				break;
 			case 12:
-				tStar->z = atof(p);
+				value = tStar->z = atof(p);
 				break;
 			case 13:
-				tStar->flux = atof(p);
+				value = tStar->flux = atof(p);
 				break;
 			case 14:
-				tStar->flux_err = atof(p);
+				value = tStar->flux_err = atof(p);
 				break;
 			case 15:
-				tStar->normmag = atof(p);
+				value = tStar->normmag = atof(p);
 				break;
 			case 16:
-				tStar->flags = atof(p);
+				value = tStar->flags = atof(p);
 				break;
 			case 17:
-				tStar->background = atof(p);
+				value = tStar->background = atof(p);
 				break;
 			case 18:
-				tStar->threshold = atof(p);
+				value = tStar->threshold = atof(p);
 				break;
 			case 19:
-				tStar->mage = atof(p);
+				value = tStar->mage = atof(p);
 				break;
 			case 20:
-				tStar->ellipticity = atof(p);
+				value = tStar->ellipticity = atof(p);
 				break;
 			case 21:
-				tStar->classstar = atof(p);
+				value = tStar->classstar = atof(p);
 				break;
 			case 22:
-				tStar->starId = atoi(p);
+				value = tStar->starId = atoi(p);
 				break;
 			case 23:
-				tStar->time = atoi(p);
+				value = tStar->time = atoi(p);
 				break;
 			}
+			if( isRef) {
+				rowValues.push_back(value);
+			}
 		}
-
 		//tStar->fwhm = fwhm[i];
 		//tStar->vignet = vignet[i];
 		tStar->next = NULL;
@@ -500,6 +505,7 @@ void StarFileFits::readStar(const char * fileName, bool isRef) {
 		if (isRef) {
 			// to every reference star
 			sprintf(tStar->redis_key, "ref_%d_%d", tStar->ccdNum, tStar->starId);
+			templateValues[tStar->redis_key] = rowValues;
 			//acl::redis_key cmd_key(conn, 100);
 			//cmd_key.set_cluster(conn, 100);
 			//if (cmd_key.exists(string)) {

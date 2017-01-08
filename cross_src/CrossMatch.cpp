@@ -13,11 +13,12 @@
 #include <time.h>
 #include <unistd.h>
 #include "StarFileFits.h"
+#include "acl_cpp/lib_acl.hpp"
 #include "CrossMatch.h"
 
 typedef struct parameters {
 	acl::redis_client_cluster *cluster;
-	std::vector<std::vector<std::string> > *sendList;
+	std::vector<std::vector<acl::string> > *sendList;
 	StarFileFits* fitsFile;
 	int lo;
 	int hi;
@@ -37,6 +38,17 @@ CrossMatch::CrossMatch() {
 CrossMatch::CrossMatch(const CrossMatch& orig) {
   fieldWidth = 0;
   fieldHeight = 0;
+}
+
+CrossMatch::CrossMatch(StarFile* refStarFile, StarFile* objStarFile) {
+	errRadius = 0;
+	refStarFileNoPtn = NULL;
+	objStarFileNoPtn = NULL;
+	zones = NULL;
+	this->fieldHeight = 0;
+	this->fieldWidth = 0;
+	this->refStarFile = refStarFile;
+	this->objStarFile = objStarFile;
 }
 
 CrossMatch::~CrossMatch() {
@@ -76,7 +88,7 @@ void CrossMatch::match(StarFile *refStarFile, StarFile *objStarFile,Partition * 
   CMStar *nextStar = objStarFile->starList;
   while (nextStar) {
       // core code!!
-	  std::pair<int, std::string> matchResult = zones->getMatchStar(nextStar);
+	  std::pair<int, acl::string> matchResult = zones->getMatchStar(nextStar);
     if(matchResult.first == -1) {
 
     	objStarFile->OTStarCount ++;
@@ -93,13 +105,78 @@ void CrossMatch::match(StarFile *refStarFile, StarFile *objStarFile,Partition * 
 #endif
 }
 
+void compressStarData( StarFileFits* refStarFile, std::vector<acl::string>& data, std::string key) {
+
+	char *string_ptr=NULL;
+	char * p;
+	for( unsigned int k = 0; k < data.size(); k ++) {
+		std::ostringstream ostr;	// whole compressed info
+		std::ostringstream osHeader;
+		std::bitset<32> header(0);
+
+		for( int m = 0; m < 25 ; m++) {
+			if( m == 0) {
+				p = strtok_r(data[k].c_str(), " ", &string_ptr);
+				// skip key value
+				continue;
+			}
+			else {
+				p = strtok_r(NULL, " ", &string_ptr);
+			}
+
+			float tValue = atof(p);
+			float kValue = refStarFile->templateValues[key][m -1];
+			if( tValue == kValue) header[m-1] = 0;
+			else {
+				header[m-1] = 1;
+				std::ostringstream temp;
+				temp << tValue - kValue;
+				std::string changeValue = temp.str();
+				int bitsValue = 0;
+				for( unsigned int j = 0; j < changeValue.length(); j+=2) {
+					if( changeValue[j] == '.') bitsValue = 10 << 4;
+					else if( changeValue[j] == '-') bitsValue = 11 << 4;
+					else bitsValue = (changeValue[j] - '0') << 4;
+					if( j + 1 < changeValue.length()) {
+						if( changeValue[j + 1] == '.') bitsValue = bitsValue + 10;
+						else if( changeValue[j + 1] == '-') bitsValue = bitsValue + 11;
+						else bitsValue = bitsValue + changeValue[j + 1] - '0';
+					}
+					ostr << static_cast<char>(bitsValue);
+				}
+				ostr << " ";
+			}
+
+		}
+		// compress head
+		for( int i = 0; i < 4; i++) {
+			int start = i * 8;
+			char value = 0;
+			for( int j = start; j < start + 8; j++) {
+				value = value * 10 + header[j];
+			}
+			osHeader << value;
+		}
+
+		acl::string newValue;
+		newValue.append(key.c_str());
+		newValue.append(" ");
+		newValue.append(osHeader.str().c_str());
+		newValue.append(" ");
+		newValue.append(ostr.str().c_str());
+		data[k] = newValue;
+
+	}
+
+}
+
 static void* singleSendThread( void * arg) {
 	// get key and value
 	parameters *pms = (parameters*) arg;
 	int failedTime = 0;
 	int lo = pms->lo;
 	int hi = pms->hi;
-	std::vector<std::vector<std::string> > *sendList = pms->sendList;
+	std::vector<std::vector<acl::string> > *sendList = pms->sendList;
 
 	acl::redis cmd;
 	cmd.set_cluster(pms->cluster, 1000);
@@ -110,14 +187,14 @@ static void* singleSendThread( void * arg) {
 		}
 
 		failedTime = 0;
-		std::vector<const char *> sendStringList;
-		int keyIndex = sendList->at(i)[0].find_first_of(' ');
-		std::string key = sendList->at(i)[0].substr(0, keyIndex);
-		for( auto sendString : sendList->at(i)) {
-			sendStringList.push_back(sendString.c_str());
-		}
+
+		int keyIndex = sendList->at(i)[0].find(' ');
+		acl::string key;
+	    sendList->at(i)[0].substr(key, 0, keyIndex);
 		//std::string value = sendString.substr(keyIndex+1);
-		while( cmd.rpush(key.c_str(), sendStringList) < 0) {
+
+	    compressStarData( pms->fitsFile, sendList->at(i), key.c_str());
+		while( cmd.rpush(key.c_str(), sendList->at(i)) < 0) {
 			printf("insert failed because %s %d\n", cmd.result_error(), i);
 			if( failedTime ++ > 5) {
 				pms->cluster->set(pms->fitsFile->redisHost, 10, 10, 1000);
@@ -125,6 +202,11 @@ static void* singleSendThread( void * arg) {
 				sleep(3);
 			}
 		}
+
+		//acl::string result;
+		//cmd.rpop(key.c_str(), result);
+		//printf("result string length: %d\n", result.length());
+
 		sendList->at(i).clear();
 		//cmd.rpush(key.c_str(), value.c_str(), NULL);
 		cmd.clear();

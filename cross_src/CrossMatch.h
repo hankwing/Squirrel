@@ -19,6 +19,7 @@ public:
 
     CrossMatch();
     CrossMatch(const CrossMatch& orig);
+    CrossMatch(StarFile* refStarFile, StarFile* objStarFile);
     virtual ~CrossMatch();
 
     void match(char *refName, char *objName, float errorBox);
@@ -40,6 +41,8 @@ public:
     void setFieldHeight(float fieldHeight);
     void setFieldWidth(float fieldWidth);
     void sendResultsToRedis(acl::redis_client_cluster *cluster, StarFileFits *objStars, int usedThreads, int& control);
+    //void compressStarData( std::vector<acl::string> data, std::string key);
+    //static void *singleSendThread( void * arg);
 
 protected:
 
