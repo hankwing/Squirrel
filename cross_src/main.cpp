@@ -123,7 +123,6 @@ void RedisInit() {
 static void * crossThread( void * command) {
 
 	string commandString = (char *) command;
-
 	string filePath = commandString.substr(commandString.find_last_of(" ") + 1);
 	string keyString = commandString.substr(0, commandString.find_first_of(" "));
 	printf("cross target star file:%s\n", filePath.c_str());

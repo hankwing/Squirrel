@@ -105,6 +105,14 @@ void CrossMatch::match(StarFile *refStarFile, StarFile *objStarFile,Partition * 
 #endif
 }
 
+void decompressStarData( StarFileFits* refStarFile, acl::string compressed) {
+	int keyIndex = compressed.find(' ');
+	acl::string key;
+	compressed.substr(key, 0, keyIndex);
+
+
+}
+
 void compressStarData( StarFileFits* refStarFile, std::vector<acl::string>& data, std::string key) {
 
 	char *string_ptr=NULL;
