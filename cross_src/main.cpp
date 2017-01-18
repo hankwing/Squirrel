@@ -16,7 +16,10 @@
 #include <stdlib.h>
 #include <time.h>
 #include <string.h>
+#include <iostream>
 #include <sys/time.h>
+#include <sys/file.h>
+#include <fstream>
 
 #include "function.h"
 #include "StarFileFits.h"
@@ -154,8 +157,25 @@ static void * crossThread( void * command) {
 		cm->setFieldHeight(areaHeight);
 		cm->setFieldWidth(areaWidth);
 		//目前minZoneLength和searchRadius没有考虑
-		// core code!!
-		cm->match(refStarFile, objStarFile, zones, areaBox);
+		// get the time now
+		time_t rawtime;
+		struct tm * timeinfo;
+		char buffer [80];
+
+		time (&rawtime);
+		timeinfo = localtime (&rawtime);
+
+		strftime (buffer,80,"%G_%m_%d_%H_%M_%S",timeinfo);
+		//puts (buffer);
+		// create output file for abnormal detection
+		int outputFile = open(buffer, O_RDWR | O_CREAT, 0666);
+		int rc = flock(outputFile, LOCK_EX);	// block if another thread is holoding the lock
+		if( rc) {
+			printf("open failed");
+		}
+		cm->match(refStarFile, objStarFile, zones, areaBox, outputFile);
+		close(outputFile);
+
 		objStarFile->getMagDiff();
 		objStarFile->fluxNorm();
 		objStarFile->tagFluxLargeVariation();
@@ -274,7 +294,7 @@ int main(int argc, char** argv) {
 	return 0;
 }
 
-void mainPlane(char *refFile, char *objFile, char *outFile) {
+/*void mainPlane(char *refFile, char *objFile, char *outFile) {
 
 	printf("starting plane cross match...\n");
 
@@ -317,7 +337,7 @@ void mainPlane(char *refFile, char *objFile, char *outFile) {
 
 	end = clock();
 	printf("total time is: %fs\n", (end - start) * 1.0 / ONESECOND);
-}
+}*/
 
 /**
  * 天球坐标匹配
@@ -691,7 +711,7 @@ void mainSphereTest(char *refFile, char *objFile, char *outFile) {
 	delete refnStarFile;
 }
 
-void mainPlaneTest(char *refFile, char *objFile, char *outFile) {
+/*void mainPlaneTest(char *refFile, char *objFile, char *outFile) {
 
 	int wcsext = 2;
 	int magErrThreshold = 0.05; //used by getMagDiff
@@ -723,4 +743,4 @@ void mainPlaneTest(char *refFile, char *objFile, char *outFile) {
 	delete objnStarFile;
 	delete refnStarFile;
 
-}
+}*/

@@ -10,6 +10,7 @@
 #include <string>
 #include <vector>
 #include <math.h>
+#include <fstream>
 #include <time.h>
 #include <unistd.h>
 #include "StarFileFits.h"
@@ -55,24 +56,24 @@ CrossMatch::~CrossMatch() {
   freeAllMemory();
 }
 
-void CrossMatch::match(char *refName, char *objName, float errorBox) {
+void CrossMatch::match(char *refName, char *objName, float errorBox, int outputFile) {
 
   refStarFile = new StarFile();
   refStarFile->readStar(refName);
   objStarFile = new StarFile();
   objStarFile->readStar(objName);
 
-  match(refStarFile, objStarFile, errorBox);
+  match(refStarFile, objStarFile, errorBox, outputFile);
 }
 
-void CrossMatch::match(StarFile *refStarFile, StarFile *objStarFile, float errorBox) {
+void CrossMatch::match(StarFile *refStarFile, StarFile *objStarFile, float errorBox, int outputFile) {
 
   //refStarFile->starList = NULL;
 
   CMStar *nextStar = objStarFile->starList;
   while (nextStar) {
       // core code!!
-    zones->getMatchStar(nextStar);
+    zones->getMatchStar(nextStar, outputFile);
     nextStar = nextStar->next;
   }
 
@@ -81,14 +82,16 @@ void CrossMatch::match(StarFile *refStarFile, StarFile *objStarFile, float error
 #endif
 }
 
-void CrossMatch::match(StarFile *refStarFile, StarFile *objStarFile,Partition * zones, float errorBox) {
+void CrossMatch::match(StarFile *refStarFile, StarFile *objStarFile,Partition * zones, float errorBox,
+		int outputFile) {
 
   //refStarFile->starList = NULL;
 
   CMStar *nextStar = objStarFile->starList;
+  // create output file
   while (nextStar) {
       // core code!!
-	  std::pair<int, acl::string> matchResult = zones->getMatchStar(nextStar);
+	  std::pair<int, acl::string> matchResult = zones->getMatchStar(nextStar, outputFile);
     if(matchResult.first == -1) {
 
     	objStarFile->OTStarCount ++;
@@ -335,12 +338,12 @@ void CrossMatch::freeAllMemory() {
   }
 }
 
-void CrossMatch::compareResult(char *refName, char *objName, char *outfName, float errorBox) {
+/*void CrossMatch::compareResult(char *refName, char *objName, char *outfName, float errorBox) {
 
   match(refName, objName, errorBox);
   matchNoPartition(refName, objName, errorBox);
   compareResult(objStarFile, objStarFileNoPtn, outfName, errorBox);
-}
+}*/
 
 void CrossMatch::compareResult(StarFile *objStarFile, StarFile *objStarFileNoPtn, const char *outfName, float errorBox) {
 
@@ -511,7 +514,7 @@ void CrossMatch::printOTStar(char *outfName, float errorBox) {
 #endif
 }
 
-void CrossMatch::testCrossMatch() {
+/*void CrossMatch::testCrossMatch() {
 
   char refName[30] = "data/referance.cat";
   char objName[30] = "data/object.cat";
@@ -525,9 +528,9 @@ void CrossMatch::testCrossMatch() {
   cm->printOTStar(otName, errorBox);
   cm->freeAllMemory();
 
-}
+}*/
 
-void CrossMatch::partitionAndNoPartitionCompare() {
+/*void CrossMatch::partitionAndNoPartitionCompare() {
 
   char refName[30] = "data/referance.cat";
   char objName[30] = "data/object.cat";
@@ -535,10 +538,10 @@ void CrossMatch::partitionAndNoPartitionCompare() {
   float errorBox = 0.7;
 
   CrossMatch *cm = new CrossMatch();
-  cm->compareResult(refName, objName, cmpOutName, errorBox);
+  //cm->compareResult(refName, objName, cmpOutName, errorBox);
   cm->freeAllMemory();
 
-}
+}*/
 
 void CrossMatch::setFieldHeight(float fieldHeight) {
   this->fieldHeight = fieldHeight;

@@ -10,6 +10,7 @@
 
 #include "cmhead.h"
 #include "StarFile.h"
+#include <fstream>
 
 class Partition {
 protected:
@@ -39,7 +40,7 @@ public:
     virtual ~Partition();
 
     void partitonStarField(StarFile *starFile);
-    std::pair<int, acl::string> getMatchStar(CMStar *objStar);
+    std::pair<int, acl::string> getMatchStar(CMStar *objStar, int outputFile);
     void printZoneDetail(char *fName);
     void freeZoneArray();
 

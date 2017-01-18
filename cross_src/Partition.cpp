@@ -13,6 +13,7 @@
 #include <utility>
 #include <string>
 #include "Partition.h"
+#include <unistd.h>
 #include "StarFile.h"
 
 int count = 0;
@@ -88,7 +89,7 @@ void Partition::partitonStarField(StarFile *starFile) {
  * @return the matched star is stored on objStar->match, 
  *         the distance between two stars is stored on objStar->error
  */
-std::pair<int, acl::string> Partition::getMatchStar(CMStar *objStar) {
+std::pair<int, acl::string> Partition::getMatchStar(CMStar *objStar, int outputFile) {
 
 	std::pair<int, acl::string> matchedInfo(-1, "");
 	long sZoneNum = 0;
@@ -115,6 +116,11 @@ std::pair<int, acl::string> Partition::getMatchStar(CMStar *objStar) {
 
 		objStar->toString(minPoint, info);
 		matchedInfo.second = info;
+		// write matched start to file for abnormal detection
+		std::stringstream ss;
+		ss << minPoint->starId << " " << objStar->mag << " " << minPoint->time << "\n";
+
+		if(write(outputFile, ss.str().c_str(), ss.str().length()) < 0);
 		//objStar->starFile->redisStrings.push_back(string);
 
 	} else {

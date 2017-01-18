@@ -22,9 +22,9 @@ public:
     CrossMatch(StarFile* refStarFile, StarFile* objStarFile);
     virtual ~CrossMatch();
 
-    void match(char *refName, char *objName, float errorBox);
-    void match(StarFile *ref, StarFile *obj, float errorBox);
-    void match(StarFile *ref, StarFile *obj,Partition * zones, float errorBox);
+    void match(char *refName, char *objName, float errorBox, int outputFile);
+    void match(StarFile *ref, StarFile *obj, float errorBox,int outputFile);
+    void match(StarFile *ref, StarFile *obj,Partition * zones, float errorBox, int outputFile);
     void compareResult(char *refName, char *objName, char *outName, float errorBox);
     void compareResult(StarFile *objStarFile,StarFile *objStarFileNoPtn, const char *outfName, float errorBox);
     void matchNoPartition(char *refName, char *objName, float errorBox);

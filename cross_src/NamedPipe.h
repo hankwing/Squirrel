@@ -69,7 +69,6 @@ public:
 			{
 				//sleep(1);
 				//printf("block\n");
-
 				res = read(pipe_fd_rd, buffer, buffer_size);
 			//	printf("%s\n",strerror(errno));
 			}while(res <= 0);
