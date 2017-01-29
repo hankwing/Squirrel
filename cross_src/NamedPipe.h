@@ -23,17 +23,18 @@ using namespace std;
 class NamedPipe {
 public:
 
-	static const int buffer_size = 1024;
+	size_t buffer_size = 1024;
 	string fifo_name;
 	// write fd is useless
 	int pipe_fd_wr;
-	int pipe_fd_rd;
+	//int pipe_fd_rd;
+	FILE *fp = NULL;
 	int res;
 	const int read_mode = O_RDONLY;
 	const int write_mode = O_WRONLY;
 	const int nonblock_mode = O_NONBLOCK;
 	int bytes_sent;
-	char buffer[buffer_size];
+	//char buffer[buffer_size];
 
 	NamedPipe( string fifo_name) {
 		//buffer = new char[buffer_size];
@@ -50,26 +51,30 @@ public:
 				exit(EXIT_FAILURE);
 			}
 		}
-		pipe_fd_rd = open(fifo_name.c_str(), read_mode);
+		//pipe_fd_rd = open(fifo_name.c_str(), read_mode);
+		fp = fopen(fifo_name.c_str(), "r");
 		pipe_fd_wr = open(fifo_name.c_str(), write_mode);
-		memset(buffer, '\0', buffer_size);
+		//memset(buffer, '\0', buffer_size);
 
 	};
 
 	~NamedPipe() {
 		close(pipe_fd_wr);
-		close(pipe_fd_rd);
+		fclose(fp);
+		//close(pipe_fd_rd);
 	}
 
 	char * getCommand() {
 		//printf("call getCommand\n");
-		if(pipe_fd_rd != -1)
+		char * buffer = (char*)malloc(sizeof(char) * buffer_size);
+		if(fp != NULL)
 		{
 			do
 			{
 				//sleep(1);
 				//printf("block\n");
-				res = read(pipe_fd_rd, buffer, buffer_size);
+				res = getline(&buffer, &buffer_size, fp);
+				//res = read(pipe_fd_rd, buffer, buffer_size);
 			//	printf("%s\n",strerror(errno));
 			}while(res <= 0);
 		}

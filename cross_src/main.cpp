@@ -165,7 +165,7 @@ static void * crossThread( void * command) {
 		time (&rawtime);
 		timeinfo = localtime (&rawtime);
 
-		strftime (buffer,80,"%G_%m_%d_%H_%M_%S",timeinfo);
+		strftime (buffer,80,"/home/wamdm/jaguar/data/%G_%m_%d_%H_%M_%S",timeinfo);
 		//puts (buffer);
 		// create output file for abnormal detection
 		int outputFile = open(buffer, O_RDWR | O_CREAT, 0666);
@@ -272,7 +272,7 @@ int main(int argc, char** argv) {
 		pthread_attr_init(&crossProcessAttrs);
 		// create first thread
 		pthread_create(&crossProcessId, &crossProcessAttrs, crossThread, command);
-		//pthread_join(crossProcessId, NULL);
+		pthread_join(crossProcessId, NULL);
 	}
 
 	//dataStore->matchOTFlag = matchOT;
