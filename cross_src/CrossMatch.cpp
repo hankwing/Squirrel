@@ -116,10 +116,100 @@ void decompressStarData( StarFileFits* refStarFile, acl::string compressed) {
 
 }
 
+/**
+ * uncompress redis data
+ */
+std::string uncompressStarData( StarFileFits* refStarFile, acl::string rowData) {
+
+	char *string_ptr=NULL;
+	char * key = strtok_r(rowData.c_str(), " ", &string_ptr);
+	char * head = strtok_r( NULL, " ", &string_ptr);
+	char * rowValue = head + 4;
+	char * rowPointer = rowValue;
+	std::ostringstream data;
+	data << key << " ";
+
+	for( int i = 0; i < 4; i++) {
+		std::bitset<8> bits(0);
+		if( head[i] != 13) {
+			bits = std::bitset<8>(head[i]);
+		}
+		for( int j = 0; j < 8 && i * 8 + j < 24; j++) {
+			int columnNum = i * 8 + j;
+			float refValue = refStarFile->templateValues[key][columnNum];
+			if( bits[7-j] == 0) data << refValue << " ";
+			else {
+				// need to uncompression
+				std::ostringstream singleData;
+				while( *rowPointer != 14) {
+					unsigned int firstValue;
+					unsigned int secondValue;
+					if( *rowPointer == 13) {
+						firstValue = 0;
+						secondValue = 0;
+					}
+					else {
+						firstValue = (*rowPointer >> 4) & 15;
+						secondValue = *rowPointer & 15;
+					}
+					switch( firstValue) {
+					case 10:
+						singleData << ".";
+						break;
+					case 11:
+						singleData << "-";
+						break;
+					case 12:
+						break;
+					default:
+						// other case
+						singleData << static_cast<unsigned char>(firstValue + '0');
+						break;
+					}
+					switch( secondValue) {
+					case 10:
+						singleData << ".";
+						break;
+					case 11:
+						singleData << "-";
+						break;
+					case 12:
+						break;
+					default:
+						singleData << static_cast<unsigned char>(secondValue + '0');;
+						break;
+					}
+					rowPointer ++;
+				}
+				rowPointer ++;
+				float diffValue = atof(singleData.str().c_str());
+				//printf("real value: %s\n", singleData.str().c_str());
+				// add space
+				data << diffValue + refValue << " ";
+			}
+		}
+	}
+	//printf("uncompressed data:%s \n", data.str().c_str());
+	return data.str();
+}
+
+
+/**
+ * compress algorithm
+ * 1~9: values
+ * 10: .
+ * 11: -
+ * 12: dummy value
+ * 13: 0
+ * 14: space
+ */
 void compressStarData( StarFileFits* refStarFile, std::vector<acl::string>& data, std::string key) {
 
 	char *string_ptr=NULL;
 	char * p;
+	char interval = 14;
+	char zeroChar = 13;
+
 	for( unsigned int k = 0; k < data.size(); k ++) {
 		std::ostringstream ostr;	// whole compressed info
 		std::ostringstream osHeader;
@@ -143,7 +233,8 @@ void compressStarData( StarFileFits* refStarFile, std::vector<acl::string>& data
 				std::ostringstream temp;
 				temp << tValue - kValue;
 				std::string changeValue = temp.str();
-				int bitsValue = 0;
+				//printf("change value:%s\n", changeValue.c_str());
+				unsigned int bitsValue = 0;
 				for( unsigned int j = 0; j < changeValue.length(); j+=2) {
 					if( changeValue[j] == '.') bitsValue = 10 << 4;
 					else if( changeValue[j] == '-') bitsValue = 11 << 4;
@@ -153,27 +244,36 @@ void compressStarData( StarFileFits* refStarFile, std::vector<acl::string>& data
 						else if( changeValue[j + 1] == '-') bitsValue = bitsValue + 11;
 						else bitsValue = bitsValue + changeValue[j + 1] - '0';
 					}
-					ostr << static_cast<char>(bitsValue);
+					else {
+						// 12 means dummy value
+						bitsValue = bitsValue + 12;
+					}
+					if( bitsValue == 0) {
+						ostr << zeroChar;
+					}
+					else ostr << static_cast<unsigned char>(bitsValue);
+					bitsValue = 0;
 				}
-				ostr << " ";
+				ostr << interval;
 			}
 
 		}
 		// compress head
 		for( int i = 0; i < 4; i++) {
 			int start = i * 8;
-			char value = 0;
+			unsigned char value = 0;
 			for( int j = start; j < start + 8; j++) {
-				value = value * 10 + header[j];
+				value = (value << 1) + header[j];
 			}
-			osHeader << value;
+			if( value == 0) osHeader << zeroChar;
+			else osHeader << value;
 		}
 
 		acl::string newValue;
 		newValue.append(key.c_str());
 		newValue.append(" ");
 		newValue.append(osHeader.str().c_str());
-		newValue.append(" ");
+		//newValue.append(" ");
 		newValue.append(ostr.str().c_str());
 		data[k] = newValue;
 
@@ -216,6 +316,8 @@ static void* singleSendThread( void * arg) {
 
 		//acl::string result;
 		//cmd.rpop(key.c_str(), result);
+		// try to uncompression
+		//uncompressStarData( pms->fitsFile, result);
 		//printf("result string length: %d\n", result.length());
 
 		sendList->at(i).clear();

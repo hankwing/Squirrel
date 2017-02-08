@@ -371,10 +371,13 @@ void StarFileFits::readStar(const char * fileName, bool isRef) {
 	CMStar *bfStar = NULL;
 	// nelem is the num of stars
 	char line[500];
+	acl::string tempData;
 	char *string_ptr=NULL;
 	char * p;
 	int i = 0, j = 0;
 	float value = 0.0;
+	acl::redis cmd;
+	cmd.set_cluster(conn, 1000);
 
 	while (!starFile.eof()) {
 
@@ -395,6 +398,9 @@ void StarFileFits::readStar(const char * fileName, bool isRef) {
 
 		if( !isRef ) {
 			strcpy(tStar->raw_info, line);
+		}
+		else {
+			tempData = acl::string(line);
 		}
 
 		for( j = 0; j < 24 ; j++) {
@@ -481,6 +487,7 @@ void StarFileFits::readStar(const char * fileName, bool isRef) {
 			}
 			if( isRef) {
 				rowValues.push_back(value);
+
 			}
 		}
 		//tStar->fwhm = fwhm[i];
@@ -506,19 +513,13 @@ void StarFileFits::readStar(const char * fileName, bool isRef) {
 			// to every reference star
 			sprintf(tStar->redis_key, "ref_%d_%d", tStar->ccdNum, tStar->starId);
 			templateValues[tStar->redis_key] = rowValues;
-			//acl::redis_key cmd_key(conn, 100);
-			//cmd_key.set_cluster(conn, 100);
-			//if (cmd_key.exists(string)) {
-				// delete key
-			//	cmd_key.del(string);
-			//}
-			//cmd_key.clear();
+			// insert the template to redis
+			if( cmd.llen(tStar->redis_key) == 0) {
+				while( cmd.rpush(tStar->redis_key, tempData, NULL) < 0) {
+					printf("insert template failed because %s %d\n", cmd.result_error(), i);
+				}
+			}
 			tStar->conn = conn;
-			//tStar->cmd_string = new acl::redis_list(conn);
-			//tStar->cmd_string->set_cluster(conn, 100);
-			//tStar->cmd_string->set_client(conn);
-			//printf("%s\n", tStar->redis_key);
-
 		}
 		else {
 			//init char** in objStarFile

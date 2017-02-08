@@ -44,7 +44,7 @@ all: Squirrel
 Squirrel: $(OBJS) $(USER_OBJS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: GCC C++ Linker'
-	g++ -L/usr/lib/jvm/jdk1.8.0_101/jre/lib/amd64/server -L"/home/wamdm/workspace/Squirrel/library/acl/lib_protocol/lib" -L"/home/wamdm/workspace/Squirrel/library/acl/lib_acl/lib" -L"/home/wamdm/workspace/Squirrel/library/acl/lib_acl_cpp/lib" -L/usr/bin/java -L"/home/wamdm/workspace/Squirrel/library/astrometry.net-0.38/lib" -L"/home/wamdm/workspace/Squirrel/library/wcstools-3.8.5/libwcs" -L"/home/wamdm/workspace/Squirrel/library/cfitsio/lib" -fPIC -o "Squirrel" $(OBJS) $(USER_OBJS) $(LIBS)
+	g++ -L/usr/lib/jvm/jdk1.8.0_65/jre/lib/amd64/server -L"/home/wamdm/workspace/Squirrel/library/acl/lib_protocol/lib" -L"/home/wamdm/workspace/Squirrel/library/acl/lib_acl/lib" -L"/home/wamdm/workspace/Squirrel/library/acl/lib_acl_cpp/lib" -L/usr/bin/java -L"/home/wamdm/workspace/Squirrel/library/astrometry.net-0.38/lib" -L"/home/wamdm/workspace/Squirrel/library/wcstools-3.8.5/libwcs" -L"/home/wamdm/workspace/Squirrel/library/cfitsio/lib" -fPIC -o "Squirrel" $(OBJS) $(USER_OBJS) $(LIBS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 
