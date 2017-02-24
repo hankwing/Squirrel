@@ -80,6 +80,7 @@ static const char* redisHost = (char*) malloc(sizeof(char*) * 30);
 int crossTime = 0;
 int threadNum = 5;
 int sendNumControl = 0;
+int sendNumCount = 0;
 // mutex controing threads
 
 
@@ -262,6 +263,7 @@ int main(int argc, char** argv) {
 
 	//int i = 0;
 	//while (strcmp(command, "exit") != 0) {
+	//printf("wait for input\n");
 	NamedPipe pipe("/tmp/Squirrel_pipe_test");
 	char * command;
 	while (strcmp((command = pipe.getCommand()), "Squirrel_exit") != 0) {
@@ -273,6 +275,8 @@ int main(int argc, char** argv) {
 		// create first thread
 		pthread_create(&crossProcessId, &crossProcessAttrs, crossThread, command);
 		pthread_join(crossProcessId, NULL);
+		if( ++sendNumCount >= threadNum ) refStarFile->isSendTemplate = true;
+
 	}
 
 	//dataStore->matchOTFlag = matchOT;

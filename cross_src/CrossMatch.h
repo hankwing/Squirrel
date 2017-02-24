@@ -16,7 +16,6 @@ class CrossMatch {
 public:
 
     static const int TimesOfErrorRadius = 10; //length of search radius
-
     CrossMatch();
     CrossMatch(const CrossMatch& orig);
     CrossMatch(StarFile* refStarFile, StarFile* objStarFile);

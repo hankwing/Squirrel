@@ -14,6 +14,7 @@
 #include "cmhead.h"
 
 StarFile::StarFile() {
+	isSendTemplate = false;
   this->fileName = NULL;
   this->starList = NULL;
   this->starNum = 0;
@@ -29,10 +30,12 @@ StarFile::StarFile(const char* fileName) {
   this->OTStarCount = 0;
   this->abStar = 0;
   this->matchedCount = 0;
+  isSendTemplate = false;
 }
 
 StarFile::StarFile(const StarFile& orig) {
 
+	isSendTemplate = false;
 	this->matchedCount = 0;
 	this->OTStarCount = 0;
 	this->abStar = 0;

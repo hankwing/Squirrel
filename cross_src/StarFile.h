@@ -25,6 +25,7 @@ public:
     int abStar;
     std::vector<std::vector<acl::string> > starDataCache;
     std::unordered_map<std::string, std::vector<float> > templateValues;
+    bool isSendTemplate;
     //std::vector<std::string> redisStrings;
 
 public:

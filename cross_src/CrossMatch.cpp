@@ -13,6 +13,8 @@
 #include <fstream>
 #include <time.h>
 #include <unistd.h>
+#include <iostream>
+#include <iomanip>
 #include "StarFileFits.h"
 #include "acl_cpp/lib_acl.hpp"
 #include "CrossMatch.h"
@@ -129,6 +131,13 @@ std::string uncompressStarData( StarFileFits* refStarFile, acl::string rowData) 
 	std::ostringstream data;
 	data << key << " ";
 
+	/*for( char* temp = head; strcmp(key, "ref_3_1") == 0 && *temp != '\0'; temp++) {
+		std::bitset<8> printBits(*temp);
+		std::wcout << *temp << " " << printBits << std::endl;
+
+	}
+	printf("\n\n");*/
+
 	for( int i = 0; i < 4; i++) {
 		std::bitset<8> bits(0);
 		if( head[i] != 13) {
@@ -189,7 +198,7 @@ std::string uncompressStarData( StarFileFits* refStarFile, acl::string rowData) 
 			}
 		}
 	}
-	//printf("uncompressed data:%s \n", data.str().c_str());
+	printf("uncompressed data:%s \n", data.str().c_str());
 	return data.str();
 }
 
@@ -210,7 +219,7 @@ void compressStarData( StarFileFits* refStarFile, std::vector<acl::string>& data
 	char interval = 14;
 	char zeroChar = 13;
 
-	for( unsigned int k = 0; k < data.size(); k ++) {
+	for( unsigned int k = refStarFile->isSendTemplate ? 0: 1; k < data.size(); k ++) {
 		std::ostringstream ostr;	// whole compressed info
 		std::ostringstream osHeader;
 		std::bitset<32> header(0);
@@ -230,10 +239,13 @@ void compressStarData( StarFileFits* refStarFile, std::vector<acl::string>& data
 			if( tValue == kValue) header[m-1] = 0;
 			else {
 				header[m-1] = 1;
+
 				std::ostringstream temp;
-				temp << tValue - kValue;
-				std::string changeValue = temp.str();
-				//printf("change value:%s\n", changeValue.c_str());
+
+				std::string changeValue = std::to_string( tValue - kValue);
+				temp << stof( changeValue);
+				//if( changeValue.find('e') != -1) printf("change value:%s\n", changeValue.c_str());
+				//printf("change value:%s\n", temp.str().c_str());
 				unsigned int bitsValue = 0;
 				for( unsigned int j = 0; j < changeValue.length(); j+=2) {
 					if( changeValue[j] == '.') bitsValue = 10 << 4;
@@ -252,6 +264,7 @@ void compressStarData( StarFileFits* refStarFile, std::vector<acl::string>& data
 						ostr << zeroChar;
 					}
 					else ostr << static_cast<unsigned char>(bitsValue);
+					if( bitsValue > 255) printf("what fuck\n");
 					bitsValue = 0;
 				}
 				ostr << interval;
@@ -291,6 +304,28 @@ static void* singleSendThread( void * arg) {
 
 	acl::redis cmd;
 	cmd.set_cluster(pms->cluster, 1000);
+
+	// send template data
+	/*if( !pms->fitsFile->isSendTemplate) {
+
+		for( int i = lo; i < hi; i++) {
+
+			int keyIndex = sendList->at(i)[0].find(' ');
+			acl::string key;
+			sendList->at(i)[0].substr(key, 0, keyIndex);
+
+			while( cmd.rpush(key.c_str(), pms->fitsFile->templateDataCache[i], NULL ) < 0) {
+				printf("insert failed because %s %d\n", cmd.result_error(), i);
+				if( failedTime ++ > 5) {
+					pms->cluster->set(pms->fitsFile->redisHost, 10, 10, 1000);
+					cmd.set_cluster(pms->cluster, 1000);
+					sleep(3);
+				}
+			}
+		}
+
+	}*/
+
 	for( int i = lo; i < hi; i++) {
 		if( sendList->at(i).size() == 0) {
 			// if i is null
@@ -317,7 +352,7 @@ static void* singleSendThread( void * arg) {
 		//acl::string result;
 		//cmd.rpop(key.c_str(), result);
 		// try to uncompression
-		//uncompressStarData( pms->fitsFile, result);
+		//uncompressStarData( pms->fitsFile, "ref_3_2 D\xc3\xfd\r&BJ\r\r\r\x0e\n\x14\x16\r\x0e\xb0\xa0\x13\x0c\x0e\n\x13\r\x0e\xb0\xa0\x0c\x0e\nSY\r\x0e\xb0\xa9\x10\x0c\x0e\nWS\r\x0e\n\a\x88\r\x0e\n\x06\r\x0e\n$'\r\x0e\nC\x15\r\x0e\xb2\xa0\r\r\x0c\x0e");
 		//printf("result string length: %d\n", result.length());
 
 		sendList->at(i).clear();

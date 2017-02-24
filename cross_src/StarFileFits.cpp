@@ -359,6 +359,7 @@ void StarFileFits::readStar(const char * fileName, bool isRef) {
 
 	if( isRef) {
 		starDataCache.resize(180001);
+		//templateDataCache.resize(180001);
 	}
 	//fitsfile *fptr; /* pointer to the FITS file, defined in fitsio.h */
 	std::ifstream starFile(fileName);
@@ -371,13 +372,14 @@ void StarFileFits::readStar(const char * fileName, bool isRef) {
 	CMStar *bfStar = NULL;
 	// nelem is the num of stars
 	char line[500];
-	acl::string tempData;
+	//acl::string tempData;
 	char *string_ptr=NULL;
 	char * p;
 	int i = 0, j = 0;
 	float value = 0.0;
-	acl::redis cmd;
-	cmd.set_cluster(conn, 1000);
+	bool isSetSendSignal = false;
+	//acl::redis cmd;
+	//cmd.set_cluster(conn, 1000);
 
 	while (!starFile.eof()) {
 
@@ -396,12 +398,12 @@ void StarFileFits::readStar(const char * fileName, bool isRef) {
 		}
 		bfStar = tStar;
 
-		if( !isRef ) {
-			strcpy(tStar->raw_info, line);
-		}
-		else {
-			tempData = acl::string(line);
-		}
+		//if( !isRef ) {
+		strcpy(tStar->raw_info, line);
+		//}
+		//else {
+		//	tempData = acl::string(line);
+		//}
 
 		for( j = 0; j < 24 ; j++) {
 			if( j == 0) {
@@ -513,13 +515,21 @@ void StarFileFits::readStar(const char * fileName, bool isRef) {
 			// to every reference star
 			sprintf(tStar->redis_key, "ref_%d_%d", tStar->ccdNum, tStar->starId);
 			templateValues[tStar->redis_key] = rowValues;
-			// insert the template to redis
-			if( cmd.llen(tStar->redis_key) == 0) {
-				while( cmd.rpush(tStar->redis_key, tempData, NULL) < 0) {
-					printf("insert template failed because %s %d\n", cmd.result_error(), i);
-				}
-			}
 			tStar->conn = conn;
+
+			if( !isSetSendSignal) {
+				isSetSendSignal = true;
+				acl::redis cmd;
+				cmd.set_cluster(conn, 1000);
+				if(cmd.llen(tStar->redis_key) > 0) isSendTemplate = true;
+				//printf("length: %d\n", cmd.llen(tStar->redis_key));
+			}
+
+			if( !isSendTemplate) {
+				acl::string templateData;
+				tStar->toString(tStar, templateData);
+				starDataCache[tStar->starId].push_back(templateData);
+			}
 		}
 		else {
 			//init char** in objStarFile
