@@ -119,8 +119,8 @@ std::pair<int, acl::string> Partition::getMatchStar(CMStar *objStar, int outputF
 		// write matched start to file for abnormal detection
 		std::stringstream ss;
 		ss << minPoint->starId << " " << objStar->mag << " " << minPoint->time << "\n";
-
-		if(write(outputFile, ss.str().c_str(), ss.str().length()) < 0);
+		// write the matched info to namedpipe for detecting abnormal behaviour
+		if(outputFile != -1 && write(outputFile, ss.str().c_str(), ss.str().length()) < 0);
 		//objStar->starFile->redisStrings.push_back(string);
 
 	} else {

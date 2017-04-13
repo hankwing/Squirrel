@@ -81,6 +81,7 @@ int crossTime = 0;
 int threadNum = 5;
 int sendNumControl = 0;
 int sendNumCount = 0;
+const string abnormalDetNamedFile = "/home/wamdm/jaguar/jaguar-go/pipe/namedpipe";
 // mutex controing threads
 
 
@@ -161,19 +162,24 @@ static void * crossThread( void * command) {
 		// get the time now
 		time_t rawtime;
 		struct tm * timeinfo;
-		char buffer [80];
+		//char buffer [80];
 
 		time (&rawtime);
 		timeinfo = localtime (&rawtime);
 
-		strftime (buffer,80,"/home/wamdm/jaguar/data/%G_%m_%d_%H_%M_%S",timeinfo);
+		//strftime (buffer,80,"/home/wamdm/jaguar/data/%G_%m_%d_%H_%M_%S",timeinfo);
 		//puts (buffer);
 		// create output file for abnormal detection
-		int outputFile = open(buffer, O_RDWR | O_CREAT, 0666);
-		int rc = flock(outputFile, LOCK_EX);	// block if another thread is holoding the lock
-		if( rc) {
-			printf("open failed");
+		int outputFile = -1;
+		if(access(abnormalDetNamedFile.c_str(), F_OK) != -1)
+		{
+			outputFile = open(abnormalDetNamedFile.c_str(), O_WRONLY);
 		}
+		//int outputFile = open(buffer, O_RDWR | O_CREAT, 0666);
+		//int rc = flock(outputFile, LOCK_EX);	// block if another thread is holoding the lock
+		//if( rc) {
+		//	printf("open failed");
+		//}
 		cm->match(refStarFile, objStarFile, zones, areaBox, outputFile);
 		close(outputFile);
 
