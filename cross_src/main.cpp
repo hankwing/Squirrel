@@ -162,12 +162,12 @@ static void * crossThread( void * command) {
 		// get the time now
 		time_t rawtime;
 		struct tm * timeinfo;
-		//char buffer [80];
+		char buffer [80];
 
 		time (&rawtime);
 		timeinfo = localtime (&rawtime);
 
-		//strftime (buffer,80,"/home/wamdm/jaguar/data/%G_%m_%d_%H_%M_%S",timeinfo);
+		strftime (buffer,80,"%G_%m_%d_%H_%M_%S\n",timeinfo);
 		//puts (buffer);
 		// create output file for abnormal detection
 		int outputFile = -1;
@@ -175,12 +175,16 @@ static void * crossThread( void * command) {
 		{
 			outputFile = open(abnormalDetNamedFile.c_str(), O_WRONLY);
 		}
+		// write head
+		if(outputFile != -1 && write(outputFile, "start\n", 6));
+		if(outputFile != -1 && write(outputFile, buffer, strlen(buffer)));
 		//int outputFile = open(buffer, O_RDWR | O_CREAT, 0666);
 		//int rc = flock(outputFile, LOCK_EX);	// block if another thread is holoding the lock
 		//if( rc) {
 		//	printf("open failed");
 		//}
 		cm->match(refStarFile, objStarFile, zones, areaBox, outputFile);
+		if(outputFile != -1 && write(outputFile, "end\n", 4));
 		close(outputFile);
 
 		objStarFile->getMagDiff();
