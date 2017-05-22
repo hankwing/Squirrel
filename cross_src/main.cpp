@@ -82,6 +82,7 @@ int threadNum = 5;
 int sendNumControl = 0;
 int sendNumCount = 0;
 const string abnormalDetNamedFile = "/home/wamdm/jaguar/jaguar-go/pipe/namedpipe";
+int outputFile = -1;
 // mutex controing threads
 
 
@@ -169,12 +170,6 @@ static void * crossThread( void * command) {
 
 		strftime (buffer,80,"%G_%m_%d_%H_%M_%S\n",timeinfo);
 		//puts (buffer);
-		// create output file for abnormal detection
-		int outputFile = -1;
-		if(access(abnormalDetNamedFile.c_str(), F_OK) != -1)
-		{
-			outputFile = open(abnormalDetNamedFile.c_str(), O_WRONLY);
-		}
 		// write head
 		if(outputFile != -1 && write(outputFile, "start\n", 6));
 		if(outputFile != -1 && write(outputFile, buffer, strlen(buffer)));
@@ -185,7 +180,6 @@ static void * crossThread( void * command) {
 		//}
 		cm->match(refStarFile, objStarFile, zones, areaBox, outputFile);
 		if(outputFile != -1 && write(outputFile, "end\n", 4));
-		close(outputFile);
 
 		objStarFile->getMagDiff();
 		objStarFile->fluxNorm();
@@ -274,6 +268,12 @@ int main(int argc, char** argv) {
 	//int i = 0;
 	//while (strcmp(command, "exit") != 0) {
 	//printf("wait for input\n");
+
+	outputFile = -1;
+	if(access(abnormalDetNamedFile.c_str(), F_OK) != -1)
+	{
+		outputFile = open(abnormalDetNamedFile.c_str(), O_WRONLY);
+	}
 	NamedPipe pipe("/tmp/Squirrel_pipe_test");
 	char * command;
 	while (strcmp((command = pipe.getCommand()), "Squirrel_exit") != 0) {
