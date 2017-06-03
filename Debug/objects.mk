@@ -4,5 +4,5 @@
 
 USER_OBJS :=
 
-LIBS := -ljvm -l_acl_cpp -l_protocol -l_acl -lcfitsio -lm -lanutils -lpthread -lwcs -lbackend
+LIBS := -l_acl_cpp -l_protocol -l_acl -lcfitsio -lm -lanutils -lpthread -lwcs -lbackend
 

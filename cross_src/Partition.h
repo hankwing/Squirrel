@@ -10,7 +10,10 @@
 
 #include "cmhead.h"
 #include "StarFile.h"
+#include "json.hpp"
 #include <fstream>
+
+using json = nlohmann::json;
 
 class Partition {
 protected:
@@ -40,7 +43,7 @@ public:
     virtual ~Partition();
 
     void partitonStarField(StarFile *starFile);
-    std::pair<int, acl::string> getMatchStar(CMStar *objStar, int outputFile);
+    std::pair<int, acl::string> getMatchStar(CMStar *objStar, int outputFile, float offSet, json& starInfoJson);
     void printZoneDetail(char *fName);
     void freeZoneArray();
 

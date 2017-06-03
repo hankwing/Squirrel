@@ -58,24 +58,26 @@ CrossMatch::~CrossMatch() {
   freeAllMemory();
 }
 
-void CrossMatch::match(char *refName, char *objName, float errorBox, int outputFile) {
+void CrossMatch::match(char *refName, char *objName, float errorBox, int outputFile,
+		json& starInfoJson) {
 
   refStarFile = new StarFile();
   refStarFile->readStar(refName);
   objStarFile = new StarFile();
   objStarFile->readStar(objName);
 
-  match(refStarFile, objStarFile, errorBox, outputFile);
+  match(refStarFile, objStarFile, errorBox, outputFile, 1.0, starInfoJson);
 }
 
-void CrossMatch::match(StarFile *refStarFile, StarFile *objStarFile, float errorBox, int outputFile) {
+void CrossMatch::match(StarFile *refStarFile, StarFile *objStarFile, float errorBox, int outputFile, float offSet,
+		json& starInfoJson) {
 
   //refStarFile->starList = NULL;
 
   CMStar *nextStar = objStarFile->starList;
   while (nextStar) {
       // core code!!
-    zones->getMatchStar(nextStar, outputFile);
+    zones->getMatchStar(nextStar, outputFile, offSet, starInfoJson);
     nextStar = nextStar->next;
   }
 
@@ -85,7 +87,7 @@ void CrossMatch::match(StarFile *refStarFile, StarFile *objStarFile, float error
 }
 
 void CrossMatch::match(StarFile *refStarFile, StarFile *objStarFile,Partition * zones, float errorBox,
-		int outputFile) {
+		int outputFile, float offSet, json& starInfoJson) {
 
   //refStarFile->starList = NULL;
 
@@ -93,7 +95,7 @@ void CrossMatch::match(StarFile *refStarFile, StarFile *objStarFile,Partition * 
   // create output file
   while (nextStar) {
       // core code!!
-	  std::pair<int, acl::string> matchResult = zones->getMatchStar(nextStar, outputFile);
+	  std::pair<int, acl::string> matchResult = zones->getMatchStar(nextStar, outputFile, offSet, starInfoJson);
     if(matchResult.first == -1) {
 
     	objStarFile->OTStarCount ++;

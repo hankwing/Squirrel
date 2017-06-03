@@ -162,8 +162,8 @@ cross_src/CrossMatchSphere.o: ../cross_src/CrossMatchSphere.cpp \
  /home/wamdm/workspace/Squirrel/library/acl/lib_acl_cpp/include/acl_cpp/disque/disque_cond.hpp \
  /home/wamdm/workspace/Squirrel/library/acl/lib_acl_cpp/include/acl_cpp/disque/disque_job.hpp \
  /home/wamdm/workspace/Squirrel/library/acl/lib_acl_cpp/include/acl_cpp/disque/disque_node.hpp \
- ../cross_src/StarFile.h ../cross_src/PartitionSphere.h \
- ../cross_src/StarFileFits.h
+ ../cross_src/StarFile.h ../cross_src/json.hpp \
+ ../cross_src/PartitionSphere.h ../cross_src/StarFileFits.h
 
 ../cross_src/CrossMatchSphere.h:
 
@@ -494,6 +494,8 @@ cross_src/CrossMatchSphere.o: ../cross_src/CrossMatchSphere.cpp \
 /home/wamdm/workspace/Squirrel/library/acl/lib_acl_cpp/include/acl_cpp/disque/disque_node.hpp:
 
 ../cross_src/StarFile.h:
+
+../cross_src/json.hpp:
 
 ../cross_src/PartitionSphere.h:
 

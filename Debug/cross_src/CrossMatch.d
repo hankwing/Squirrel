@@ -162,7 +162,7 @@ cross_src/CrossMatch.o: ../cross_src/CrossMatch.cpp \
  /home/wamdm/workspace/Squirrel/library/acl/lib_acl_cpp/include/acl_cpp/disque/disque_job.hpp \
  /home/wamdm/workspace/Squirrel/library/acl/lib_acl_cpp/include/acl_cpp/disque/disque_node.hpp \
  ../cross_src/CrossMatch.h ../cross_src/Partition.h ../cross_src/cmhead.h \
- ../cross_src/PartitionSphere.h
+ ../cross_src/json.hpp ../cross_src/PartitionSphere.h
 
 ../cross_src/StarFileFits.h:
 
@@ -495,5 +495,7 @@ cross_src/CrossMatch.o: ../cross_src/CrossMatch.cpp \
 ../cross_src/Partition.h:
 
 ../cross_src/cmhead.h:
+
+../cross_src/json.hpp:
 
 ../cross_src/PartitionSphere.h:

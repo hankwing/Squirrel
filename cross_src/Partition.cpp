@@ -89,7 +89,7 @@ void Partition::partitonStarField(StarFile *starFile) {
  * @return the matched star is stored on objStar->match, 
  *         the distance between two stars is stored on objStar->error
  */
-std::pair<int, acl::string> Partition::getMatchStar(CMStar *objStar, int outputFile) {
+std::pair<int, acl::string> Partition::getMatchStar(CMStar *objStar, int outputFile, float offSet, json& starInfoJson) {
 
 	std::pair<int, acl::string> matchedInfo(-1, "");
 	long sZoneNum = 0;
@@ -116,6 +116,13 @@ std::pair<int, acl::string> Partition::getMatchStar(CMStar *objStar, int outputF
 
 		objStar->toString(minPoint, info);
 		matchedInfo.second = info;
+
+		// add offSets by hand
+		if( minPoint->starId == 2345 || minPoint->starId == 13000) {
+			objStar->mag += offSet;
+		}
+		// construct json
+		starInfoJson[std::to_string(minPoint->starId)] = objStar->mag;
 		// write matched start to file for abnormal detection
 		std::stringstream ss;
 		ss << minPoint->starId << " " << objStar->mag << " " << minPoint->time << "\n";

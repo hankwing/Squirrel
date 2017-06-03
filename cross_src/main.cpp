@@ -26,7 +26,11 @@
 #include "CrossMatchSphere.h"
 #include "CrossMatch.h"
 #include "NamedPipe.h"
+#include <iterator>
 #include "acl_cpp/lib_acl.hpp"
+
+
+using json = nlohmann::json;
 
 #define TestCrossMatch1
 
@@ -63,6 +67,8 @@ int fluxRatioSDTimes; //factor of flux filter
 int gridX; //对星表进行分区计算fluxratio，gridX为分区X方向上的个数。
 int gridY; //对星表进行分区计算fluxratio，gridY为分区Y方向上的个数。
 
+// ccd id
+int ccdNum;
 int cpu;
 int method;
 char *cmdDbInfo;
@@ -83,8 +89,19 @@ int sendNumControl = 0;
 int sendNumCount = 0;
 const string abnormalDetNamedFile = "/home/wamdm/jaguar/jaguar-go/pipe/namedpipe";
 int outputFile = -1;
+
+// for produce ab offsets
+static int stepsNow = 0;
+static int offSetSteps = 0;
+static vector<string> abOffsets;
 // mutex controing threads
 
+static void readAbTemplate() {
+	ifstream is( "data/abstar.temp");
+	is >> offSetSteps;
+	abOffsets = vector<string>{istream_iterator<string>{is},
+        istream_iterator<string>{}};
+}
 
 void setDefaultValue() {
 
@@ -128,6 +145,7 @@ void RedisInit() {
 
 static void * crossThread( void * command) {
 
+	stepsNow = (stepsNow + 1) % offSetSteps;
 	string commandString = (char *) command;
 	string filePath = commandString.substr(commandString.find_last_of(" ") + 1);
 	string keyString = commandString.substr(0, commandString.find_first_of(" "));
@@ -168,19 +186,17 @@ static void * crossThread( void * command) {
 		time (&rawtime);
 		timeinfo = localtime (&rawtime);
 
+		// construct json
+		json starInfosJson;
+
 		strftime (buffer,80,"%G_%m_%d_%H_%M_%S\n",timeinfo);
 		//puts (buffer);
 		// write head
 		if(outputFile != -1 && write(outputFile, "start\n", 6));
 		if(outputFile != -1 && write(outputFile, buffer, strlen(buffer)));
-		//int outputFile = open(buffer, O_RDWR | O_CREAT, 0666);
-		//int rc = flock(outputFile, LOCK_EX);	// block if another thread is holoding the lock
-		//if( rc) {
-		//	printf("open failed");
-		//}
-		cm->match(refStarFile, objStarFile, zones, areaBox, outputFile);
+		cm->match(refStarFile, objStarFile, zones, areaBox, outputFile, atof(abOffsets[stepsNow].c_str()),
+				starInfosJson);
 		if(outputFile != -1 && write(outputFile, "end\n", 4));
-
 		objStarFile->getMagDiff();
 		objStarFile->fluxNorm();
 		objStarFile->tagFluxLargeVariation();
@@ -188,7 +204,7 @@ static void * crossThread( void * command) {
 		//dataStore->store(objStarFile, 0);
 		//cm->printMatchedRst(outFile, objStarFile, areaBox);
 		gettimeofday(&end, NULL);
-		cm->sendResultsToRedis(cluster, refStarFile, threadNum, sendNumControl);
+		//cm->sendResultsToRedis(cluster, refStarFile, threadNum, sendNumControl);
 
 		delete cm;
 		delete objStarFile;
@@ -205,14 +221,22 @@ static void * crossThread( void * command) {
 		// send result to redis
 		printf("%s\n", commandString.c_str());
 
+//		acl::redis cmd;
+//		cmd.set_cluster(cluster, 1000);
+//		while( cmd.rpush(keyString.c_str(), commandString.c_str(), NULL) < 0) {
+//			printf("insert failed\n");
+//			sleep(10);
+//		}
+//		cmd.clear();
+
+		// send json info to redis
 		acl::redis cmd;
 		cmd.set_cluster(cluster, 1000);
-		while( cmd.rpush(keyString.c_str(), commandString.c_str(), NULL) < 0) {
+		while( cmd.rpush( ("ccd" + std::to_string(ccdNum)).c_str(), starInfosJson.dump().c_str(), NULL) < 0) {
 			printf("insert failed\n");
 			sleep(10);
 		}
 		cmd.clear();
-
 	}
 
 	return NULL;
@@ -268,7 +292,8 @@ int main(int argc, char** argv) {
 	//int i = 0;
 	//while (strcmp(command, "exit") != 0) {
 	//printf("wait for input\n");
-
+	// read abTemplate file
+	readAbTemplate();
 	outputFile = -1;
 	if(access(abnormalDetNamedFile.c_str(), F_OK) != -1)
 	{
@@ -427,7 +452,16 @@ int parsePara(int argc, char** argv) {
 			strcpy((char*) redisHost, argv[i + 1]);
 			i++;
 
-		} else if (strcmp(argv[i], "-threadNumber") == 0) {
+		}
+		else if (strcmp(argv[i], "-ccd") == 0) {
+			if (i + 1 >= argc || strlen(argv[i + 1]) == 0) {
+				printf("-redisHost must follow a integer\n");
+				return 0;
+			}
+			ccdNum = atoi(argv[i + 1]);
+			i++;
+
+		}else if (strcmp(argv[i], "-threadNumber") == 0) {
 			if (i + 1 >= argc || strlen(argv[i + 1]) == 0) {
 				printf("-redisHost must follow a integer\n");
 				return 0;
@@ -604,6 +638,8 @@ void showHelp() {
 			"-width <number>:            on plane corrdinate partition, the max value of X axis\n");
 	printf(
 			"-height <number>:           on plane corrdinate partition, the max value of Y axis\n");
+	printf(
+			"-ccd <number>:           the CCD index\n");
 	printf(
 			"-errorRadius <number>:      the max error between two point, unit is degree, defalut 0.005556\n");
 	printf(

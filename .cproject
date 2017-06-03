@@ -63,7 +63,6 @@
 								<option id="gnu.cpp.link.option.other.69549782" name="Other options (-Xlinker [option])" superClass="gnu.cpp.link.option.other" useByScannerDiscovery="false"/>
 								<option id="gnu.cpp.link.option.userobjs.765617369" name="Other objects" superClass="gnu.cpp.link.option.userobjs" useByScannerDiscovery="false"/>
 								<option id="gnu.cpp.link.option.libs.1988484058" name="Libraries (-l)" superClass="gnu.cpp.link.option.libs" useByScannerDiscovery="false" valueType="libs">
-									<listOptionValue builtIn="false" value="jvm"/>
 									<listOptionValue builtIn="false" value="_acl_cpp"/>
 									<listOptionValue builtIn="false" value="_protocol"/>
 									<listOptionValue builtIn="false" value="_acl"/>
