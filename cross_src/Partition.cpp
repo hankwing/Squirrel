@@ -125,7 +125,9 @@ std::pair<int, acl::string> Partition::getMatchStar(CMStar *objStar, int outputF
 		starInfoJson[std::to_string(minPoint->starId)] = objStar->mag;
 		// write matched start to file for abnormal detection
 		std::stringstream ss;
-		ss << minPoint->starId << " " << objStar->mag << " " << minPoint->time << "\n";
+		ss << minPoint->pixx << " " << minPoint->pixy << " " << minPoint->alpha << " " << minPoint->delta << " "
+				<< minPoint->zone << " " << minPoint->starId << " " << objStar->mag << " " << minPoint->time <<
+				" " << minPoint->ellipticity << " " << minPoint->ccdNum << "\n";
 		// write the matched info to namedpipe for detecting abnormal behaviour
 		if(outputFile != -1 && write(outputFile, ss.str().c_str(), ss.str().length()) < 0);
 		//objStar->starFile->redisStrings.push_back(string);

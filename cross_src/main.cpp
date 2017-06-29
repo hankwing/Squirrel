@@ -190,6 +190,8 @@ static void * crossThread( void * command) {
 		json starInfosJson;
 
 		strftime (buffer,80,"%G_%m_%d_%H_%M_%S\n",timeinfo);
+		// write timestamp to json
+		starInfosJson["timestamp"] = buffer;
 		//puts (buffer);
 		// write head
 		if(outputFile != -1 && write(outputFile, "start\n", 6));
@@ -230,13 +232,13 @@ static void * crossThread( void * command) {
 //		cmd.clear();
 
 		// send json info to redis
-		acl::redis cmd;
-		cmd.set_cluster(cluster, 1000);
-		while( cmd.rpush( ("ccd" + std::to_string(ccdNum)).c_str(), starInfosJson.dump().c_str(), NULL) < 0) {
-			printf("insert failed\n");
-			sleep(10);
-		}
-		cmd.clear();
+//		acl::redis cmd;
+//		cmd.set_cluster(cluster, 1000);
+//		while( cmd.rpush( ("ccd" + std::to_string(ccdNum)).c_str(), starInfosJson.dump().c_str(), NULL) < 0) {
+//			printf("insert failed\n");
+//			sleep(10);
+//		}
+//		cmd.clear();
 	}
 
 	return NULL;
