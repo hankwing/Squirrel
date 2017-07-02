@@ -11,7 +11,9 @@
 #include "cmhead.h"
 #include "StarFile.h"
 #include "json.hpp"
+#include <vector>
 #include <fstream>
+using namespace std;
 
 using json = nlohmann::json;
 
@@ -43,7 +45,8 @@ public:
     virtual ~Partition();
 
     void partitonStarField(StarFile *starFile);
-    std::pair<int, acl::string> getMatchStar(CMStar *objStar, int outputFile, float offSet, json& starInfoJson);
+    std::pair<int, acl::string> getMatchStar(CMStar *objStar, int outputFile,
+    		vector<vector<string> > offSetsList, int stepsNow);
     void printZoneDetail(char *fName);
     void freeZoneArray();
 

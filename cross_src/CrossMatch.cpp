@@ -18,6 +18,7 @@
 #include "StarFileFits.h"
 #include "acl_cpp/lib_acl.hpp"
 #include "CrossMatch.h"
+using namespace std;
 
 typedef struct parameters {
 	acl::redis_client_cluster *cluster;
@@ -59,25 +60,25 @@ CrossMatch::~CrossMatch() {
 }
 
 void CrossMatch::match(char *refName, char *objName, float errorBox, int outputFile,
-		json& starInfoJson) {
+		vector<vector<string>> offSetsList, int stepsNow ) {
 
   refStarFile = new StarFile();
   refStarFile->readStar(refName);
   objStarFile = new StarFile();
   objStarFile->readStar(objName);
 
-  match(refStarFile, objStarFile, errorBox, outputFile, 1.0, starInfoJson);
+  match(refStarFile, objStarFile, errorBox, outputFile, offSetsList, stepsNow);
 }
 
-void CrossMatch::match(StarFile *refStarFile, StarFile *objStarFile, float errorBox, int outputFile, float offSet,
-		json& starInfoJson) {
+void CrossMatch::match(StarFile *refStarFile, StarFile *objStarFile, float errorBox, int outputFile,
+		vector<vector<string>> offSetsList, int stepsNow) {
 
   //refStarFile->starList = NULL;
 
   CMStar *nextStar = objStarFile->starList;
   while (nextStar) {
       // core code!!
-    zones->getMatchStar(nextStar, outputFile, offSet, starInfoJson);
+    zones->getMatchStar(nextStar, outputFile, offSetsList, stepsNow);
     nextStar = nextStar->next;
   }
 
@@ -87,7 +88,7 @@ void CrossMatch::match(StarFile *refStarFile, StarFile *objStarFile, float error
 }
 
 void CrossMatch::match(StarFile *refStarFile, StarFile *objStarFile,Partition * zones, float errorBox,
-		int outputFile, float offSet, json& starInfoJson) {
+		int outputFile, vector<vector<string>> offSetsList, int stepsNow) {
 
   //refStarFile->starList = NULL;
 
@@ -95,7 +96,7 @@ void CrossMatch::match(StarFile *refStarFile, StarFile *objStarFile,Partition * 
   // create output file
   while (nextStar) {
       // core code!!
-	  std::pair<int, acl::string> matchResult = zones->getMatchStar(nextStar, outputFile, offSet, starInfoJson);
+	  std::pair<int, acl::string> matchResult = zones->getMatchStar(nextStar, outputFile, offSetsList, stepsNow);
     if(matchResult.first == -1) {
 
     	objStarFile->OTStarCount ++;

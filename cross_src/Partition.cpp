@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unordered_set>
 #include <math.h>
 #include <time.h>
 #include <utility>
@@ -15,6 +16,8 @@
 #include "Partition.h"
 #include <unistd.h>
 #include "StarFile.h"
+
+using namespace std;
 
 int count = 0;
 
@@ -89,7 +92,8 @@ void Partition::partitonStarField(StarFile *starFile) {
  * @return the matched star is stored on objStar->match, 
  *         the distance between two stars is stored on objStar->error
  */
-std::pair<int, acl::string> Partition::getMatchStar(CMStar *objStar, int outputFile, float offSet, json& starInfoJson) {
+std::pair<int, acl::string> Partition::getMatchStar(CMStar *objStar, int outputFile,
+		vector<vector<string>> offSetsList, int stepsNow) {
 
 	std::pair<int, acl::string> matchedInfo(-1, "");
 	long sZoneNum = 0;
@@ -118,11 +122,13 @@ std::pair<int, acl::string> Partition::getMatchStar(CMStar *objStar, int outputF
 		matchedInfo.second = info;
 
 		// add offSets by hand
-		if( minPoint->starId == 2345 || minPoint->starId == 13000) {
-			objStar->mag += offSet;
+		if( minPoint->starId % 5000 == 0) {
+			int index = minPoint->starId / 5000 / 6;
+			objStar->mag += atof(offSetsList[index][stepsNow].c_str()) ;
 		}
+
 		// construct json
-		starInfoJson[std::to_string(minPoint->starId)] = objStar->mag;
+		//starInfoJson[std::to_string(minPoint->starId)] = objStar->mag;
 		// write matched start to file for abnormal detection
 		std::stringstream ss;
 		ss << minPoint->pixx << " " << minPoint->pixy << " " << minPoint->alpha << " " << minPoint->delta << " "

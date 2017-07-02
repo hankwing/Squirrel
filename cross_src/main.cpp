@@ -93,14 +93,16 @@ int outputFile = -1;
 // for produce ab offsets
 static int stepsNow = 0;
 static int offSetSteps = 0;
-static vector<string> abOffsets;
+static vector<vector<string>> abOffsetsList;
 // mutex controing threads
 
-static void readAbTemplate() {
-	ifstream is( "data/abstar.temp");
+static void readAbTemplate(string templatePath) {
+	vector<string> abOffsets;
+	ifstream is( templatePath);
 	is >> offSetSteps;
 	abOffsets = vector<string>{istream_iterator<string>{is},
         istream_iterator<string>{}};
+	abOffsetsList.push_back(abOffsets);
 }
 
 void setDefaultValue() {
@@ -145,8 +147,18 @@ void RedisInit() {
 
 static void * crossThread( void * command) {
 
-	stepsNow = (stepsNow + 1) % offSetSteps;
 	string commandString = (char *) command;
+//	if( commandString.find("abFileTemplate") == 0) {
+//		// change abnormal star template file
+//		stepsNow = 0;
+//		string filePath = commandString.substr(commandString.find_last_of(" ") + 1);
+//		cout << "add abnormal template" << endl;
+//		ifstream is(filePath);
+//		is >> offSetSteps;
+//		abOffsets = vector<string>{istream_iterator<string>{is},istream_iterator<string>{}};
+//	}
+//	else {
+	stepsNow = (stepsNow + 1) % offSetSteps;
 	string filePath = commandString.substr(commandString.find_last_of(" ") + 1);
 	string keyString = commandString.substr(0, commandString.find_first_of(" "));
 	printf("cross target star file:%s\n", filePath.c_str());
@@ -187,17 +199,16 @@ static void * crossThread( void * command) {
 		timeinfo = localtime (&rawtime);
 
 		// construct json
-		json starInfosJson;
+		//json starInfosJson;
 
 		strftime (buffer,80,"%G_%m_%d_%H_%M_%S\n",timeinfo);
 		// write timestamp to json
-		starInfosJson["timestamp"] = buffer;
+		//starInfosJson["timestamp"] = buffer;
 		//puts (buffer);
 		// write head
 		if(outputFile != -1 && write(outputFile, "start\n", 6));
 		if(outputFile != -1 && write(outputFile, buffer, strlen(buffer)));
-		cm->match(refStarFile, objStarFile, zones, areaBox, outputFile, atof(abOffsets[stepsNow].c_str()),
-				starInfosJson);
+		cm->match(refStarFile, objStarFile, zones, areaBox, outputFile, abOffsetsList,stepsNow);
 		if(outputFile != -1 && write(outputFile, "end\n", 4));
 		objStarFile->getMagDiff();
 		objStarFile->fluxNorm();
@@ -295,7 +306,12 @@ int main(int argc, char** argv) {
 	//while (strcmp(command, "exit") != 0) {
 	//printf("wait for input\n");
 	// read abTemplate file
-	readAbTemplate();
+	readAbTemplate("data/chaoxinxing.txt");
+	readAbTemplate("data/GammaRayBurst.txt");
+	readAbTemplate("data/shishuangxing.txt");
+	readAbTemplate("data/weiyinlitoujing.txt");
+	readAbTemplate("data/yaobian.txt");
+	readAbTemplate("data/abstar.temp");
 	outputFile = -1;
 	if(access(abnormalDetNamedFile.c_str(), F_OK) != -1)
 	{
